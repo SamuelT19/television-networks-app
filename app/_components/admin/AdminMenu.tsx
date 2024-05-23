@@ -32,7 +32,7 @@ function AdminMenu() {
           Dashboard
         </Button>
       </Link>
-      <Link href="/dashboard" style={{ width: "100%" }}>
+      <Link href="/channels" style={{ width: "100%" }}>
         <Button
           variant="text"
           startIcon={<LiveTvIcon />}
@@ -48,7 +48,7 @@ function AdminMenu() {
           Channels
         </Button>
       </Link>
-      <Link href="/dashboard" style={{ width: "100%" }}>
+      <Link href="/programs" style={{ width: "100%" }}>
         <Button
           variant="text"
           startIcon={<MovieFilterIcon />}
