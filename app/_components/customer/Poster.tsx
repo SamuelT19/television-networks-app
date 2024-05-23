@@ -15,6 +15,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import Types from "./Types";
 import Image from "next/image";
+import Header from "./Header";
 
 function Poster() {
   const truncate = (str: string, n: number) => {
@@ -33,7 +34,9 @@ function Poster() {
       flex={1}
       bgcolor="#121F4D"
       color="white"
-      sx={{ position: "relative", minHeight: "600px" }}
+      sx={{ position: "relative", minHeight: "600px","@media (max-width:600px)": {
+        minHeight: "710px",
+      },}}
     >
       <Box
         sx={{
@@ -45,6 +48,9 @@ function Poster() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           color: "white",
+          "@media (max-width:600px)": {
+            height:"370px",
+          },
         }}
       >
         <Container
@@ -77,19 +83,6 @@ function Poster() {
                 32°
               </Typography>
             </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "40px",
-                height: "40px",
-                backgroundColor: "#5f5f61",
-                borderRadius: "50%",
-              }}
-            >
-              <SearchIcon />
-            </Box>
 
             <Avatar alt="Remy Sharp" src={avatar.src} />
             <Box
@@ -115,7 +108,7 @@ function Poster() {
             sx={{
               width: { md: "60%", sm: "80%" },
               height: "185px",
-              mt: "15vh",
+              mt: "118px",
               ml: "2%",
               color: "seashell",
               overflow: "hidden",
@@ -149,12 +142,15 @@ function Poster() {
             <Box
               sx={{
                 width: "50%",
-                height: "350px",
+                height: "250px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 paddingLeft: 1,
                 paddingBottom: 1,
+                "@media (max-width:600px)": {
+                  width:"90%",
+                },
               }}
             >
               <Box sx={{ width: "100%", paddingX: 1, paddingBottom: 1 }}>

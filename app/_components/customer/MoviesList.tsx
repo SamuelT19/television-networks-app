@@ -1,106 +1,137 @@
-import React from "react";
-import { Box, Typography, Container, Avatar, Grid } from "@mui/material";
+"use client";
 
-import WbSunnyIcon from "@mui/icons-material/WbSunny";
-import avatar from "../../../public/avatar_profile.jpg";
-import SearchIcon from "@mui/icons-material/Search";
+import React, { useEffect, useState } from "react";
+import { Box, Typography, Container, Grid } from "@mui/material";
 
-function MoviesList() {
- 
+import MovieCard from "./MovieCard";
+import Header from "./Header";
+import { Movie } from "@/app/context/types";
+import { fetchMovies } from "./FetchMovies";
+import { useProgramsContext } from "@/app/context/ProgramsContext";
+
+interface MoviesListProps {
+  data: string;
+}
+
+const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
+  const { state } = useProgramsContext();
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const moviesData = await fetchMovies();
+        if (data === "movies") {
+          setMovies(moviesData);
+        } else if (data === "favorites") {
+          const favoriteMovies = moviesData.filter((movie: Movie) =>
+            state.favorites.includes(movie.Title)
+          );
+          setFilteredMovies(favoriteMovies);
+        } else if (data === "watchLater") {
+          const watchLaterMovies = moviesData.filter((movie: Movie) =>
+            state.watchLater.includes(movie.Title)
+          );
+          setFilteredMovies(watchLaterMovies);
+        }
+      } catch (error) {
+        console.error("Failed to fetch movies:", error);
+      }
+    };
+
+    fetchData();
+  }, [data, state]);
+
+  const convertMinutesToHours = (minutes: string) => {
+    let match = minutes.match(/^(\d+)/);
+
+    if (match) {
+      let numericPart = match[1];
+      let timeInMinutes = parseInt(numericPart, 10);
+      if (timeInMinutes < 60) {
+        return `${timeInMinutes}m`;
+      }
+      const hours = Math.floor(timeInMinutes / 60);
+      const mins = timeInMinutes % 60;
+      return `${hours}h ${mins}m`;
+    } else {
+      return minutes;
+    }
+  };
+
   return (
     <>
       <Container
         sx={{ position: "relative", backgroundColor: "#121f4d", mt: 4 }}
       >
-        <Box>
-          <Container
+        <Header
+          movies={movies}
+          setFilteredMovies={setFilteredMovies}
+          data={data}
+        />
+        {data === "movies" && (
+          <Container sx={{ height: "50px" }}>
+            <Grid container gap="40px" color="white" mb={1}>
+              {["Recommended", "Popular", "Featured"].map((text) => (
+                <Typography
+                  key={text}
+                  variant="h3"
+                  sx={{
+                    fontSize: "1rem",
+                    fontWeight: 500,
+                    opacity: 0.8,
+                    "&:hover": {
+                      opacity: 1,
+                      transform: "scale(1.1)",
+                      transition: "all 0.3s ease",
+                    },
+                  }}
+                >
+                  {text}
+                </Typography>
+              ))}
+            </Grid>
+            <hr />
+          </Container>
+        )}
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            width: "95%",
+            height: "470px",
+            overflowY: "scroll",
+            whiteSpace: "nowrap",
+            padding: "10px",
+          }}
+        >
+          <Box
             sx={{
-              position: "absolute",
-              top: 2,
               display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
-              height: "50px",
-              mt: 2,
-              color: "white",
+              gap: "5px",
+              "@media (max-width:600px)": {
+                flexDirection: "column",
+                height: "260px",
+                width: "80%",
+              },
             }}
           >
-            <Typography variant="h5" sx={{ fontWeight: 600 }}>
-              Movies
-            </Typography>
-
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "end",
-                alignItems: "center",
-                gap: "20px",
-              }}
-            >
-              <Typography component="p" sx={{ fontSize: "14px", opacity: 0.8 }}>
-                12:30PM
-              </Typography>
-              <Box sx={{ display: "flex", alignItems: "center", opacity: 0.8 }}>
-                <WbSunnyIcon />
-                <Typography variant="h6" sx={{ fontSize: "14px" }}>
-                  32°
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "40px",
-                  height: "40px",
-                  backgroundColor: "#5f5f61",
-                  borderRadius: "50%",
-                }}
-              >
-                <SearchIcon />
-              </Box>
-
-              <Avatar alt="Remy Sharp" src={avatar.src} />
-              <Box
-                sx={{
-                  width: "50px",
-                  borderRadius: "50%",
-                  backgroundImage: `url(${avatar.src})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              ></Box>
-            </Box>
-          </Container>
+            ,{" "}
+            {filteredMovies.map((movie) => (
+              <MovieCard
+                key={movie.Title}
+                title={movie.Title}
+                length={convertMinutesToHours(movie.Runtime)}
+                poster={movie.Poster}
+              />
+            ))}
+          </Box>
         </Box>
-        <Container sx={{ height: "50px", marginTop: "80px" }}>
-  <Grid container gap="40px" color="white" mb={1}>
-    {["Recommended", "Popular", "Featured"].map((text) => (
-      <Typography
-        key={text}
-        variant="h3"
-        sx={{
-          fontSize: "1rem",
-          fontWeight: 500,
-          opacity: 0.8,
-          "&:hover": {
-            opacity: 1,
-            transform: "scale(1.1)",
-            transition: "all 0.3s ease",
-          },
-        }}
-      >
-        {text}
-      </Typography>
-    ))}
-  </Grid>
-  <hr />
-</Container>
-        <Box></Box>
       </Container>
     </>
   );
-}
+};
 
 export default MoviesList;
