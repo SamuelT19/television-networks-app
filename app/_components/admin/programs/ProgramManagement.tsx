@@ -40,7 +40,7 @@ const socket = io("http://localhost:5000");
 
 const ProgramManagement = () => {
   const [validationErrors, setValidationErrors] = useState<
-    Record<string | number, string | number | undefined>
+    Record<string | number, string | undefined>
   >({});
 
   // State variables with specified types
