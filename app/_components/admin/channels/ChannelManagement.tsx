@@ -16,7 +16,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
-import { z } from "zod"; 
+import { z,ZodError} from "zod"; 
 import axiosBase from "@/app/endPoints/axios"
 
 // Define a Zod schema for channel data
@@ -33,9 +33,9 @@ interface Channel {
 const ChannelManagement = () => {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [open, setOpen] = useState(false);
-  const [currentChannel, setCurrentChannel] = useState(null);
+  const [currentChannel, setCurrentChannel] = useState<Channel | null>(null);
   const [channelName, setChannelName] = useState("");
-  const [validationError, setValidationError] = useState(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const ChannelManagement = () => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const handleOpen = (channel = null) => {
+  const handleOpen = (channel: Channel | null = null) => {
     setCurrentChannel(channel);
     setChannelName(channel ? channel.name : "");
     setOpen(true);
@@ -58,11 +58,13 @@ const ChannelManagement = () => {
     setValidationError(null);
   };
 
+
   const handleSubmit = () => {
     const newChannel = {
       id: currentChannel ? currentChannel.id : 0,
       name: channelName,
     };
+  
     try {
       channelSchema.parse(newChannel);
       if (currentChannel) {
@@ -87,7 +89,11 @@ const ChannelManagement = () => {
           });
       }
     } catch (error) {
-      setValidationError(error.message);
+      if (error instanceof ZodError) {
+        setValidationError(error.message);
+      } else {
+        console.error("Unexpected error:", error);
+      }
     }
   };
 

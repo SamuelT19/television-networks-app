@@ -1,5 +1,3 @@
-"use client";
-
 import axiosBase from "@/app/endPoints/axios";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
@@ -13,6 +11,15 @@ import socketIOClient from "socket.io-client";
 
 const ENDPOINT = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000/";
 
+interface Program {
+  id: number;
+  name: string;
+  category: {
+    id: number;
+    name: string;
+  };
+}
+
 const ProgramCategoryPieChart = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#AF19FF"];
   const categories = [
@@ -21,7 +28,7 @@ const ProgramCategoryPieChart = () => {
     { id: 3, name: "Featured" },
   ];
 
-  const [programData, setProgramData] = useState([]);
+  const [programData, setProgramData] = useState<Program[]>([]);
 
   useEffect(() => {
     const socket = socketIOClient(ENDPOINT);
@@ -45,14 +52,15 @@ const ProgramCategoryPieChart = () => {
   }, []);
 
   const getCategoryCounts = () => {
-    const categoryCounts = new Map();
+    const categoryCounts = new Map<string, number>();
     categories.forEach((category) => {
       categoryCounts.set(category.name, 0);
     });
 
     programData.forEach((program) => {
       const categoryName = program.category.name;
-      categoryCounts.set(categoryName, categoryCounts.get(categoryName) + 1);
+      const currentCount = categoryCounts.get(categoryName) || 0;
+      categoryCounts.set(categoryName, currentCount + 1);
     });
 
     return Array.from(categoryCounts.entries()).map(([name, count]) => ({
@@ -64,8 +72,7 @@ const ProgramCategoryPieChart = () => {
   const data = getCategoryCounts();
 
   return (
-    <Card  sx={{boxShadow: "2px 4px 2px 7px rgba(0, 0, 0, 0.2)"
-  }}>
+    <Card  sx={{boxShadow: "2px 4px 2px 7px rgba(0, 0, 0, 0.2)"}}>
       <CardContent>
         <Typography
           variant="h5"

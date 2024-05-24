@@ -40,7 +40,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
           backgroundColor: "#053d75",
           color: "#fff",
           p: 1.5,
-          borderRadius: "6px"
+          borderRadius: "6px",
         }}
       >
         <PeopleOutlineIcon
@@ -126,8 +126,8 @@ const Dashboard: React.FC = () => {
           </Box>
         </Grid>
 
-        <Grid item sx={{fontSize: "10px"}}>
-          <Button variant="contained" sx={{ backgroundColor: "#053d75"}}>
+        <Grid item sx={{ fontSize: "10px" }}>
+          <Button variant="contained" sx={{ backgroundColor: "#053d75" }}>
             Add Filter
           </Button>
         </Grid>
@@ -141,16 +141,16 @@ const Dashboard: React.FC = () => {
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <ProgramCount/>
+          <ProgramCount />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <ChannelCount/>
+          <ChannelCount />
         </Grid>
 
         {/* Add more Grid items with DashboardCard as needed */}
       </Grid>
-      <ProgramCategoryPieChart/>
-      <ProgramTypeLineChart/>
+      <ProgramCategoryPieChart />
+      {/* <ProgramTypeLineChart/> */}
       {/* <ChartsPage/> */}
     </Box>
   );

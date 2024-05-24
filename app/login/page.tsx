@@ -128,7 +128,7 @@ const Login: React.FC = () => {
                   fullWidth
                   margin="normal"
                   error={!!errors.phoneNumber}
-                  helperText={errors.phoneNumber?.message}
+                  helperText={String(errors.phoneNumber?.message)}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -152,7 +152,7 @@ const Login: React.FC = () => {
                   fullWidth
                   margin="normal"
                   error={!!errors.password}
-                  helperText={errors.password?.message}
+                  helperText={String(errors.phoneNumber?.message)}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
