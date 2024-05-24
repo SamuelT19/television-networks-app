@@ -13,11 +13,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
-import ChartsPage from "../ChartsPage";
 import ProgramCount from "./ProgramCount";
 import ChannelCount from "./ChannelCount";
 import ProgramCategoryPieChart from "./ProgramCategoryPieChart";
-import ProgramTypeLineChart from "./ProgramTypeLineChart ";
 
 interface DashboardCardProps {
   title: string;
