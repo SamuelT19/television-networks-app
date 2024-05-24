@@ -1,19 +1,19 @@
 import { z } from 'zod';
 
 export const ProgramSchema = z.object({
-  id: z.string(),
-  title: z.string().nonempty(),
+  id: z.number().positive(),
+  title: z.string().min(1),
   duration: z.number().positive(),
-  description: z.string().nonempty(),
-  channelId: z.string().nonempty(),
-  typeId: z.string().nonempty(),
+  description: z.string().min(1),
+  channelId: z.number().positive(),
+  typeId: z.number().positive(),
   categoryId: z.number().positive(),
   videoUrl: z.string().url(),
 });
 
 export type Program = z.infer<typeof ProgramSchema>;
 
-export const validateProgram = (program: Partial<Program>): Record<string, string | undefined> => {
+export const validateProgram = (program: Partial<Program>): Record<string, string |number| undefined> => {
   try {
     ProgramSchema.parse(program);
     return {};

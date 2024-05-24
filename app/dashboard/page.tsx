@@ -8,7 +8,7 @@ const Dashboard: React.FC = () => {
   return (
     <>
       <Box>
-        <AdminNav />
+        <AdminNav title="Dashboard"/>
       </Box>
       <Box sx={{ display: "flex" }}>
         <Box

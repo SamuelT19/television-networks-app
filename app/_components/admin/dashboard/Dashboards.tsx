@@ -14,6 +14,10 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import ChartsPage from "../ChartsPage";
+import ProgramCount from "./ProgramCount";
+import ChannelCount from "./ChannelCount";
+import ProgramCategoryPieChart from "./ProgramCategoryPieChart";
+import ProgramTypeLineChart from "./ProgramTypeLineChart ";
 
 interface DashboardCardProps {
   title: string;
@@ -63,7 +67,7 @@ const Dashboard: React.FC = () => {
   return (
     <Box
       sx={{
-        mt: 5,
+        mt: 10,
         ml: "auto",
         mr: "auto",
         borderRadius: "5px",
@@ -137,13 +141,16 @@ const Dashboard: React.FC = () => {
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard title="Program" value="37" change="+12% This Month" />
+          <ProgramCount/>
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard title="Channel" value="37" change="+12% This Month" />
+          <ChannelCount/>
         </Grid>
+
         {/* Add more Grid items with DashboardCard as needed */}
       </Grid>
+      <ProgramCategoryPieChart/>
+      <ProgramTypeLineChart/>
       {/* <ChartsPage/> */}
     </Box>
   );

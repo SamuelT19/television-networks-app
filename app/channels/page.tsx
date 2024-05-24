@@ -9,9 +9,9 @@ const Channel: React.FC = () => {
   return (
     <>
       <Box>
-        <AdminNav />
+        <AdminNav title="Channels" />
       </Box>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", height: "100vh" }}>
         <Box
           sx={{
             width: "15%",
@@ -20,8 +20,8 @@ const Channel: React.FC = () => {
         >
           <AdminMenu />
         </Box>
-        <Box sx={{ flex: 1 }}>
-          <ChannelManagement/>
+        <Box sx={{ flex: 1, margin: " 10px 30px" }}>
+          <ChannelManagement />
         </Box>
       </Box>
     </>

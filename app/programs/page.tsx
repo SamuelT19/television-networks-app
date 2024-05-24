@@ -8,9 +8,10 @@ const Program: React.FC = () => {
   return (
     <>
       <Box>
-        <AdminNav />
+      <AdminNav title="Programs"/>
+
       </Box>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex" , height: "100vh" }}>
         <Box
           sx={{
             width: "15%",
@@ -19,8 +20,9 @@ const Program: React.FC = () => {
         >
           <AdminMenu />
         </Box>
-        <Box sx={{ flex: 1 }}>
-          <ProgramManagement />
+        <Box sx={{ flex: 1 , margin: " 10px 30px" }}>
+          <ProgramManagement/>
+
         </Box>
       </Box>
     </>
