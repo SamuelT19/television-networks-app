@@ -156,55 +156,7 @@ const ProgramManagement = () => {
         },
         size: 50,
       },
-      // {
-      //   accessorKey: "channelId",
-      //   header: "Channel ID",
-      //   muiEditTextFieldProps: {
-      //     type: "number",
 
-      //     required: true,
-      //     error: !!validationErrors?.channelId,
-      //     helperText: validationErrors?.channelId,
-      //     onFocus: () =>
-      //       setValidationErrors({ ...validationErrors, channelId: undefined }),
-      //   },
-      // },
-      // {
-      //   accessorKey: "typeId",
-      //   header: "Type ID",
-      //   muiEditTextFieldProps: {
-      //     type: "number",
-
-      //     required: true,
-      //     error: !!validationErrors?.typeId,
-      //     helperText: validationErrors?.typeId,
-      //     onFocus: () =>
-      //       setValidationErrors({ ...validationErrors, typeId: undefined }),
-      //   },
-      // },
-      // {
-      //   accessorKey: "categoryId",
-      //   header: "Category ID",
-      //   muiEditTextFieldProps: {
-      //     type: "number",
-      //     required: true,
-      //     error: !!validationErrors?.categoryId,
-      //     helperText: validationErrors?.categoryId,
-      //     onFocus: () =>
-      //       setValidationErrors({ ...validationErrors, categoryId: undefined }),
-      //   },
-      // },
-      // {
-      //   accessorKey: "videoUrl",
-      //   header: "Video URL",
-      //   muiEditTextFieldProps: {
-      //     required: true,
-      //     error: !!validationErrors?.videoUrl,
-      //     helperText: validationErrors?.videoUrl,
-      //     onFocus: () =>
-      //       setValidationErrors({ ...validationErrors, videoUrl: undefined }),
-      //   },
-      // },
     ],
     [validationErrors]
   );
@@ -233,7 +185,7 @@ const ProgramManagement = () => {
 
   const openDeleteConfirmModal = (row: MRT_Row<Program>) => {
     if (window.confirm("Are you sure you want to delete this program?")) {
-      deleteProgram(row.original.id);
+      deleteProgram(String(row.original.id));
     }
   };
 
@@ -243,7 +195,7 @@ const ProgramManagement = () => {
     createDisplayMode: "modal",
     editDisplayMode: "modal",
     enableEditing: true,
-    getRowId: (row) => row.id,
+    getRowId: (row) => String(row.id),
     muiToolbarAlertBannerProps: isError
       ? {
           color: "error",

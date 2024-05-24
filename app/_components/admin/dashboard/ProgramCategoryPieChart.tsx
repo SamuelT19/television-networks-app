@@ -1,3 +1,5 @@
+'use client'
+
 import axiosBase from "@/app/endPoints/axios";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
