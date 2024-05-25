@@ -18,6 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { z,ZodError} from "zod"; 
 import axiosBase from "@/app/endPoints/axios"
+import { io } from "socket.io-client";
 
 const channelSchema = z.object({
   id: z.number(),
@@ -29,6 +30,9 @@ interface Channel {
   name: string;
 }
 
+const ENDPOINT = process.env.TV_APP_BACKEND_URL || "http://localhost:5000/";
+const socket = io(ENDPOINT);
+
 const ChannelManagement = () => {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [open, setOpen] = useState(false);
@@ -37,12 +41,27 @@ const ChannelManagement = () => {
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    axiosBase.get("/api/channels")
-      .then((response) => setChannels(response.data))
-      .catch((error) => console.error("Error fetching channels:", error))
-      .finally(() => setIsLoading(false));
-  }, []);
+useEffect(() => {
+  const fetchChannels = async () => {
+    try {
+      const response = await axiosBase.get("/api/channels");
+      setChannels(response.data);
+    } catch (error) {
+      console.error("Error fetching channels:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchChannels();
+
+  socket.on("updateChannels", fetchChannels);
+
+  return () => {
+    socket.off("updateChannels", fetchChannels);
+  };
+
+}, []);
 
   const handleOpen = (channel: Channel | null = null) => {
     setCurrentChannel(channel);

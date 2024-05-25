@@ -12,7 +12,10 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import socketIOClient from "socket.io-client";
+import io from "socket.io-client";
+
+const ENDPOINT = process.env.TV_APP_BACKEND_URL || "http://localhost:5000/";
+const socket = io(ENDPOINT);
 
 interface Program {
   id: number;
@@ -21,14 +24,12 @@ interface Program {
   typeName: string;
 }
 
-const ENDPOINT = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000/";
-
 const ProgramTypeLineChart: React.FC = () => {
   const [programTypeData, setProgramTypeData] = useState<
     Array<{ [key: string]: string | number }>
   >([]);
 
-  const [dataCount, setDataCount]= useState<Program[]>([])
+  const [dataCount, setDataCount] = useState<Program[]>([]);
   const types = [
     { id: 1, name: "Live TV" },
     { id: 2, name: "Movies" },
@@ -38,25 +39,27 @@ const ProgramTypeLineChart: React.FC = () => {
 
   const COLORS = ["#f2281d", "#48f21d", "#1d2bf2", "#eff21d"];
 
-  const getPeriod = (day: number) => {
-    if (day <= 6) return "1-6";
-    if (day <= 12) return "7-12";
-    if (day <= 18) return "13-18";
-    if (day <= 24) return "19-24";
-    return "25-30";
+  const getDayOfMonth = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    if (day <= 5) return 5;
+    if (day <= 10) return 10;
+    if (day <= 15) return 15;
+    if (day <= 20) return 20;
+    if (day <= 25) return 25;
+    return 30;
   };
 
   const aggregateProgramData = (programData: Array<Program>) => {
     const aggregatedData: Array<{ [key: string]: string | number }> = [
-      { period: "1-6" },
-      { period: "7-12" },
-      { period: "13-18" },
-      { period: "19-24" },
-      { period: "25-30" },
+      { day: 5 },
+      { day: 10 },
+      { day: 15 },
+      { day: 20 },
+      { day: 25 },
+      { day: 30 },
     ];
 
-
-    
     aggregatedData.forEach((data) => {
       types.forEach((type) => {
         data[type.name] = 0;
@@ -64,13 +67,14 @@ const ProgramTypeLineChart: React.FC = () => {
     });
 
     programData.forEach((program) => {
-      const day = new Date(program.airDate).getDate();
-      const period = getPeriod(day);
-      const index = aggregatedData.findIndex((item) => item.period === period);
+      const day = getDayOfMonth(program.airDate);
+      const dayIndex = aggregatedData.findIndex((item) => item.day === day);
       types.forEach((type) => {
         if (program.typeId === type.id) {
-          aggregatedData[index][type.name] =
-            (aggregatedData[index][type.name] as number) + 1;
+          for (let i = dayIndex; i < aggregatedData.length; i++) {
+            aggregatedData[i][type.name] =
+              (aggregatedData[i][type.name] as number) + 1;
+          }
         }
       });
     });
@@ -85,7 +89,7 @@ const ProgramTypeLineChart: React.FC = () => {
     });
 
     dataCount.forEach((program) => {
-        const typeName = program.typeName;
+      const typeName = program.typeName;
       const currentCount = typeCounts.get(typeName) || 0;
       typeCounts.set(typeName, currentCount + 1);
     });
@@ -98,33 +102,41 @@ const ProgramTypeLineChart: React.FC = () => {
 
   const data = getTypeCounts();
 
-
   useEffect(() => {
-    const socket = socketIOClient(ENDPOINT);
-    axiosBase
-      .get<Array<Program>>("/api/programs")
-      .then((response) => {
+    const fetchProgramData = async () => {
+      try {
+        const response = await axiosBase.get<Array<Program>>("/api/programs");
         const programData = response.data;
         setProgramTypeData(aggregateProgramData(programData));
-        setDataCount(programData)
-      })
-      .catch((error) => {
+        setDataCount(programData);
+      } catch (error) {
         console.error("Error fetching program types:", error);
-      });
+      }
+    };
 
-    socket.on("programDataUpdate", (data: Array<Program>) => {
+    const handleProgramDataUpdate = (data: Array<Program>) => {
       setProgramTypeData(aggregateProgramData(data));
-    });
+    };
+
+    fetchProgramData();
+
+    socket.on("updatePrograms", handleProgramDataUpdate);
 
     return () => {
-      socket.disconnect();
+      socket.off("updatePrograms", handleProgramDataUpdate);
     };
   }, []);
 
+
   return (
-    <Card sx={{ marginTop:"20px",boxShadow: "4px 4px 2px 4px rgba(0, 0, 0, 0.2)" }}>
+    <Card
+      sx={{
+        marginTop: "20px",
+        boxShadow: "4px 4px 2px 4px rgba(0, 0, 0, 0.2)",
+      }}
+    >
       <CardContent>
-      <Typography
+        <Typography
           variant="h5"
           component="h2"
           gutterBottom
@@ -133,10 +145,10 @@ const ProgramTypeLineChart: React.FC = () => {
             padding: "20px",
             color: "white",
             backgroundColor: "black",
-            borderRadius: "5px"
+            borderRadius: "5px",
           }}
         >
-          Programs by Category
+          Programs by Types
         </Typography>
         <Box
           style={{
@@ -146,41 +158,45 @@ const ProgramTypeLineChart: React.FC = () => {
             justifyContent: "center",
           }}
         >
-        <LineChart
-          width={600}
-          height={400}
-          data={programTypeData}
-          margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="period"
-            label={{
-              value: "Days of the Month (1-30)",
-              position: "insideBottom",
-              marginTop:"29px"
-            }}
-          />
-          <YAxis
-            label={{
-              value: "Total Programs",
-              angle: -90,
-              position: "insideLeft",
-            }}
-          />
-          <Tooltip />
-          <Legend style={{marginTop:"50px"}}/>
-          {types.map((type, index) => (
-            <Line
-              key={type.id}
-              type="monotone"
-              dataKey={type.name}
-              stroke={COLORS[index]}
+          <LineChart
+            width={600}
+            height={400}
+            data={programTypeData}
+            margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="day"
+              label={{
+                value: "Days of the Month",
+                position: "insideBottom",
+                marginTop: "29px",
+              }}
+              ticks={[5, 10, 15, 20, 25, 30]}
             />
-          ))}
-        </LineChart>
+            <YAxis
+              label={{
+                value: "Total Programs",
+                angle: -90,
+                position: "insideLeft",
+              }}
+            />
+            <Tooltip />
+            <Legend style={{ marginTop: "50px" }} />
+            {types.map((type, index) => (
+              <Line
+                key={type.id}
+                type="monotone"
+                dataKey={type.name}
+                stroke={COLORS[index]}
+              />
+            ))}
+          </LineChart>
 
-        <Box>
+          <Box>
+            <Typography variant="h5" component="h6" color="black" mb="2">
+              Total Programs
+            </Typography>
             {data.map((entry, index) => (
               <Box
                 key={index}
@@ -209,8 +225,6 @@ const ProgramTypeLineChart: React.FC = () => {
       </CardContent>
     </Card>
   );
-
-
 };
 
 export default ProgramTypeLineChart;

@@ -146,11 +146,9 @@ const Dashboard: React.FC = () => {
           <ChannelCount />
         </Grid>
 
-        {/* Add more Grid items with DashboardCard as needed */}
       </Grid>
       <ProgramCategoryPieChart />
       <ProgramTypeLineChart/>
-      {/* <ChartsPage/> */}
     </Box>
   );
 };

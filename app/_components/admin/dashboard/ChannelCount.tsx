@@ -6,7 +6,8 @@ import { Box, Card, CardContent, Typography } from "@mui/material";
 import axiosBase from "@/app/endPoints/axios";
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 
-const socket = io("http://localhost:5000");
+const ENDPOINT = process.env.TV_APP_BACKEND_URL || "http://localhost:5000/";
+const socket = io(ENDPOINT);
 
 const ChannelCount: React.FC = () => {
   const [channelCount, setChannelCount] = useState<number>(0);
@@ -23,10 +24,10 @@ const ChannelCount: React.FC = () => {
 
     fetchChannelCount();
 
-    socket.on("channelCountUpdate", fetchChannelCount);
+    socket.on("updateChannels", fetchChannelCount);
 
     return () => {
-      socket.off("channelCountUpdate", fetchChannelCount);
+      socket.off("updateChannels", fetchChannelCount);
     };
   }, []);
 

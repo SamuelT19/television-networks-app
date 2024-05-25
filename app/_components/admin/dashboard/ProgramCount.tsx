@@ -6,7 +6,9 @@ import { Box, Card, CardContent, Typography } from '@mui/material';
 import axiosBase from '@/app/endPoints/axios';
 import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 
-const socket = io('http://localhost:5000');
+const ENDPOINT = process.env.TV_APP_BACKEND_URL || "http://localhost:5000/";
+
+const socket = io(ENDPOINT);
 
 const ProgramCount: React.FC = () => {
   const [programCount, setProgramCount] = useState<number>(0);
@@ -23,10 +25,10 @@ const ProgramCount: React.FC = () => {
 
     fetchProgramCount();
 
-    socket.on('programCountUpdate', fetchProgramCount);
+    socket.on('updatePrograms', fetchProgramCount);
 
     return () => {
-      socket.off('programCountUpdate', fetchProgramCount);
+      socket.off('updatePrograms', fetchProgramCount);
     };
   }, []);
 

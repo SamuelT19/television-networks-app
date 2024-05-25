@@ -26,7 +26,7 @@ const UserProfileDialog: React.FC<UserProfileDialogProps> = ({ open, onClose }) 
           top: 10,
           right: 10,
           margin: 0,
-          width: "200px",
+          minWidth: "200px",
         },
       }}>
       <DialogContent sx={{display: 'flex',flexDirection:"column",justifyContent:"center",alignItems:"center"}}>

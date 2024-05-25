@@ -217,13 +217,119 @@ const ProgramManagement = () => {
     onCreatingRowSave: handleCreateProgram,
     onEditingRowCancel: () => setValidationErrors({}),
     onEditingRowSave: handleSaveProgram,
-    renderCreateRowDialogContent: ({ table, row, internalEditComponents }) => (
+    renderCreateRowDialogContent: ({ table, row }: { table: any; row: MRT_Row<Program> }) => (
       <>
         <DialogTitle variant="h4">Create New Program</DialogTitle>
         <DialogContent
-          sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+          sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
         >
-          {internalEditComponents}
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Title"
+                variant="standard"
+                name="title"
+                value={row.original.title}
+                onChange={(e) =>
+                  table.setEditingRow({ ...row, title: e.target.value })
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Duration"
+                variant="standard"
+                name="duration"
+                type="number"
+                value={row.original.duration}
+                onChange={(e) =>
+                  table.setEditingRow({ ...row, duration: e.target.value })
+                }
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Video URL"
+                variant="standard"
+                name="videoUrl"
+                type="url"
+                value={row.original.videoUrl}
+                onChange={(e) =>
+                  table.setEditingRow({ ...row, videoUrl: e.target.value })
+                }
+              />
+            </Grid>
+
+            <Grid item xs={6}>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel id="select1">Channels</InputLabel>
+                <Select
+                  labelId="select1"
+                  id="1"
+                  value={row.original.channelId}
+                  onChange={(e) =>
+                    table.setEditingRow({ ...row, channelId: e.target.value })
+                  }
+                  label="Channel"
+                  name="channel"
+                >
+                  {channels.map((channel) => (
+                    <MenuItem key={channel.id} value={channel.id}>
+                      {channel.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={6}>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel id="select2">Types</InputLabel>
+                <Select
+                  labelId="select2"
+                  id="2"
+                  value={row.original.typeId}
+                  onChange={(e) =>
+                    table.setEditingRow({ ...row, typeId: e.target.value })
+                  }
+                  label="Type"
+                  name="type"
+                >
+                  {types.map((type) => (
+                    <MenuItem key={type.id} value={type.id}>
+                      {type.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={6}>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel id="select3">Categories</InputLabel>
+                <Select
+                  labelId="select3"
+                  id="3"
+                  value={row.original.categoryId}
+                  onChange={(e) =>
+                    table.setEditingRow({ ...row, categoryId: e.target.value })
+                  }
+                  label="Category"
+                  name="category"
+                >
+                  {categories.map((category) => (
+                    <MenuItem key={category.id} value={category.id}>
+                      {category.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          
         </DialogContent>
         <DialogActions>
           <MRT_EditActionButtons variant="text" table={table} row={row} />

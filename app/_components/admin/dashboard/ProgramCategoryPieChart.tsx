@@ -1,17 +1,14 @@
-'use client';
+"use client";
 
 import axiosBase from "@/app/endPoints/axios";
 import { Box, Card, CardContent, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-} from "recharts";
-import socketIOClient from "socket.io-client";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import io from "socket.io-client";
 
-const ENDPOINT = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000/";
+const ENDPOINT = process.env.TV_APP_BACKEND_URL || "http://localhost:5000/";
+
+const socket = io(ENDPOINT);
 
 interface Program {
   id: number;
@@ -29,8 +26,6 @@ const ProgramCategoryPieChart = () => {
   const [programData, setProgramData] = useState<Program[]>([]);
 
   useEffect(() => {
-    const socket = socketIOClient(ENDPOINT);
-
     axiosBase
       .get("/api/programs")
       .then((response) => {
@@ -40,12 +35,14 @@ const ProgramCategoryPieChart = () => {
         console.error("Error fetching program categories:", error);
       });
 
-    socket.on("programDataUpdate", (data) => {
+    socket.on("updatePrograms", (data) => {
       setProgramData(data);
     });
 
     return () => {
-      socket.disconnect();
+      socket.off("updatePrograms", (data) => {
+        setProgramData(data);
+      });
     };
   }, []);
 
@@ -81,7 +78,7 @@ const ProgramCategoryPieChart = () => {
             padding: "20px",
             color: "white",
             backgroundColor: "black",
-            borderRadius: "5px"
+            borderRadius: "5px",
           }}
         >
           Programs by Category
@@ -119,6 +116,9 @@ const ProgramCategoryPieChart = () => {
           </ResponsiveContainer>
 
           <Box>
+            <Typography variant="h5" component="h6" color="black" mb="4">
+              Total Programs
+            </Typography>
             {data.map((entry, index) => (
               <Box
                 key={index}
@@ -150,4 +150,3 @@ const ProgramCategoryPieChart = () => {
 };
 
 export default ProgramCategoryPieChart;
-
