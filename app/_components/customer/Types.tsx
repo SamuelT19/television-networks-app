@@ -80,7 +80,7 @@ function Types() {
         scrollbarWidth: "thin",
         
         "@media (max-width:600px)": {
-          bottom: "4px",
+          bottom: "100px",
         },
       }}
     >
