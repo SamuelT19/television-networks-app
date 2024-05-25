@@ -10,12 +10,10 @@ const ChartsPage = () => {
   const [programTypesData, setProgramTypesData] = useState([]);
 
   useEffect(() => {
-    // Fetch data for pie chart
     axios.get('/api/programByCategory')
       .then(response => setProgramCategories(response.data))
       .catch(error => console.error('Error fetching programs by category:', error));
 
-    // Fetch data for line chart
     axios.get('/api/programByType')
       .then(response => setProgramTypesData(response.data))
       .catch(error => console.error('Error fetching programs by type over time:', error));

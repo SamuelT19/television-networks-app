@@ -1,3 +1,10 @@
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  isAdmin: boolean;
+}
 
 export interface Movie {
   Title: string;
@@ -6,6 +13,7 @@ export interface Movie {
 }
 
 export interface State {
+  user: User | null;
   favorites: string[];
   watchLater: string[];
 }
@@ -13,3 +21,4 @@ export interface State {
 export type Action =
   | { type: 'TOGGLE_FAVORITE'; payload: string }
   | { type: 'TOGGLE_WATCH_LATER'; payload: string }
+  | { type: 'SET_USER'; payload: User };

@@ -19,7 +19,6 @@ import AddIcon from "@mui/icons-material/Add";
 import { z,ZodError} from "zod"; 
 import axiosBase from "@/app/endPoints/axios"
 
-// Define a Zod schema for channel data
 const channelSchema = z.object({
   id: z.number(),
   name: z.string().min(1),

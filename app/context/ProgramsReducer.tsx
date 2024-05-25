@@ -4,6 +4,7 @@ import React from "react";
 import { State, Action } from "./types";
 
 export const initialState = {
+  user: null,
   favorites: [],
   watchLater: [],
 };
@@ -24,6 +25,11 @@ export const programsReducer = (state: State, action: Action) => {
         watchLater: state.watchLater.includes(action.payload)
           ? state.watchLater.filter((title) => title !== action.payload)
           : [...state.watchLater, action.payload],
+      };
+      case "SET_USER":
+      return {
+        ...state,
+        user: action.payload,
       };
     default:
       return state;

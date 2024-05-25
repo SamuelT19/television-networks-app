@@ -3,6 +3,7 @@
 import React from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Avatar, Typography, Button } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { useProgramsContext } from "@/app/context/ProgramsContext";
 
 interface UserProfileDialogProps {
   open: boolean;
@@ -10,6 +11,8 @@ interface UserProfileDialogProps {
 }
 
 const UserProfileDialog: React.FC<UserProfileDialogProps> = ({ open, onClose }) => {
+
+  const {state} = useProgramsContext();
 
     const router = useRouter();
 
@@ -29,10 +32,10 @@ const UserProfileDialog: React.FC<UserProfileDialogProps> = ({ open, onClose }) 
       <DialogContent sx={{display: 'flex',flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
         <Avatar sx={{ width: 56, height: 56, marginBottom: "8px" }} />
         <Typography variant="h6" sx={{ marginBottom: "8px" }}>
-          Username
+        {state.user ? state.user.username : ""}
         </Typography>
         <Typography variant="body2" sx={{ marginBottom: "16px" }}>
-          user@example.com
+        {state.user ? state.user.email : ""}
         </Typography>
       </DialogContent>
       <DialogActions>

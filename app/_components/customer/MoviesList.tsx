@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Container, Grid, useMediaQuery,useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Container,
+  Grid,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 
 import MovieCard from "./MovieCard";
 import Header from "./Header";
@@ -14,7 +21,6 @@ interface MoviesListProps {
 }
 
 const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
-  
   const { state } = useProgramsContext();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
@@ -134,29 +140,31 @@ const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
               },
             }}
           >
-            {filteredMovies.map((movie) => (
-              <MovieCard
-                key={movie.Title}
-                title={movie.Title}
-                length={convertMinutesToHours(movie.Runtime)}
-                poster={movie.Poster}
-              />
-            ))}
+            {filteredMovies.length === 0 ? (
+              <Typography variant="h6" color="red" fontWeight={500}>No data of {data}, Please add some</Typography>
+            ) : (
+              filteredMovies.map((movie) => (
+                <MovieCard
+                  key={movie.Title}
+                  title={movie.Title}
+                  length={convertMinutesToHours(movie.Runtime)}
+                  poster={movie.Poster}
+                />
+              ))
+            )}
           </Box>
         </Box>
-        {isSmallScreen&& 
-        <Box
-          sx={{
-            height: "40%",
-            width: "100%",
-            position: "absolute",
-            bottom: 0,
-            background: "linear-gradient(to top, black, transparent)",
-            
-          }}
-        ></Box>
-        }
-        
+        {isSmallScreen && (
+          <Box
+            sx={{
+              height: "40%",
+              width: "100%",
+              position: "absolute",
+              bottom: 0,
+              background: "linear-gradient(to top, black, transparent)",
+            }}
+          ></Box>
+        )}
       </Container>
     </>
   );
