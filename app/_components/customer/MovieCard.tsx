@@ -40,6 +40,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, length, poster }) => {
           filter: "brightness(0.8)",
         },
         "@media (max-width: 600px)": {
+          position:"relative",
           width: "100%",
         },
         backgroundImage: `url(${poster})`,
@@ -63,22 +64,30 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, length, poster }) => {
             backgroundColor: "rgba(0, 0, 0, 0.6)",
             padding: "4px 8px",
             borderRadius: 1,
+            color:"white"
           }}
         >
           {length}
         </Typography>
       </Box>
       <CardContent>
-        <Typography variant="h6" component="div">
+        <Typography variant="h6" component="div" fontWeight="600">
           {title}
         </Typography>
       </CardContent>
       <CardActions
         sx={{
           justifyContent: "center",
+          backgroundColor: "rgba(0, 0, 0, 0.6)", 
+          borderRadius: "0 0 4px 4x",
           "@media (max-width: 600px)": {
-            flexDirection: "row",
-            justifyContent: "flex-end",
+            position:"absolute",
+            right:0,
+            top:0,
+            bottom:0,
+            width:"80px",
+            flexDirection: "column", 
+            justifyContent: "center",
           },
         }}
       >
@@ -87,6 +96,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, length, poster }) => {
         </IconButton>
         <IconButton aria-label="watch later" onClick={handleWatchLaterClick}>
           <WatchLater color={isWatchLater ? "primary" : "inherit"} />
+
         </IconButton>
         <IconButton aria-label="play">
           <PlayCircle />

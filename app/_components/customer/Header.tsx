@@ -5,22 +5,45 @@ import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import SearchBar from "./SearchBar";
 import UserProfile from "./UserProfile";
 import { Movie } from "@/app/context/types";
+import { ArrowBackIos } from "@mui/icons-material";
 
 interface HeaderProps {
   movies: Movie[];
   setFilteredMovies: React.Dispatch<React.SetStateAction<Movie[]>>;
   data: string;
 }
+import { useRouter } from "next/navigation";
 
 function Header({ movies, setFilteredMovies, data }: HeaderProps) {
+  const router = useRouter();
+  const handleBack = () => {
+    router.back();
+  };
   const title = data.charAt(0).toUpperCase() + data.slice(1);
+  const iconStyles = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "50px",
+    height: "50px",
+    borderRadius: "50%",
+    backgroundColor: "#1e3264",
+    color: "#fff",
+    transition: "background-color 0.3s, transform 0.3s",
+    "&:hover": {
+      backgroundColor: "#0165FE",
+      transform: "scale(1.1)",
+    },
+    "@media (min-width:600px)": {
+      display: "none",
+    },
+  };
   return (
     <>
       <Box
         sx={{
           position: "relative",
           height: "75px",
-
         }}
       >
         <Container
@@ -36,6 +59,17 @@ function Header({ movies, setFilteredMovies, data }: HeaderProps) {
             color: "white",
           }}
         >
+          <Box sx={iconStyles}>
+            <Box
+              onClick={handleBack}
+              style={{
+                marginLeft: "5px",
+                marginTop: "3px",
+              }}
+            >
+              <ArrowBackIos />
+            </Box>
+          </Box>
           <Typography variant="h5" sx={{ fontWeight: 600 }}>
             {title}
           </Typography>
@@ -49,10 +83,23 @@ function Header({ movies, setFilteredMovies, data }: HeaderProps) {
               paddingRight: "50px",
             }}
           >
-            <Typography component="p" sx={{ fontSize: "14px", opacity: 0.8 }}>
+            <Typography
+              component="p"
+              sx={{
+                fontSize: "14px",
+                opacity: 0.8,
+                display: { xs: "none", sm: "block" },
+              }}
+            >
               12:30PM
             </Typography>
-            <Box sx={{ display: "flex", alignItems: "center", opacity: 0.8 }}>
+            <Box
+              sx={{
+                display: { xs: "none", sm: "flex" },
+                alignItems: "center",
+                opacity: 0.8,
+              }}
+            >
               <WbSunnyIcon />
               <Typography variant="h6" sx={{ fontSize: "14px" }}>
                 32°

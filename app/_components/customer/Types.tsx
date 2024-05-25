@@ -74,15 +74,13 @@ function Types() {
       sx={{
         display: "flex",
         position: "absolute",
-        bottom: 12,
+        bottom: 20,
         overflowX: "auto",
         whiteSpace: "nowrap",
-        scrollbarWidth: "none",
-        "&::-webkit-scrollbar": {
-          display: "none",
-        },
+        scrollbarWidth: "thin",
+        
         "@media (max-width:600px)": {
-          bottom: "-14px",
+          bottom: "4px",
         },
       }}
     >

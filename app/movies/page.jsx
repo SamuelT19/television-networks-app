@@ -1,18 +1,23 @@
+'use client'
 import React from 'react'
 import Navigate from '../_components/customer/Navigate'
 import MoviesList from '../_components/customer/MoviesList'
 import { Box } from '@mui/material'
-import LogoBack from '../_components/customer/LogoBack'
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 function Movies() {
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+ 
+
   return (
     <>
-    <Box sx={{display:"flex",backgroundColor:"#121f4d"}}>
-      <LogoBack />
-      <Navigate/>
-      <MoviesList data="movies"/>
-    </Box>
-    
+      <Box sx={{ display: "flex", backgroundColor: "#121f4d" }}>
+        {!isSmallScreen && <Navigate />}
+        <MoviesList data="movies" />
+      </Box>
     </>
   )
 }

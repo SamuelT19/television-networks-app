@@ -55,10 +55,16 @@ function SearchBar({ movies, setFilteredMovies }: HeaderProps) {
           <TextField
             id="search"
             label="Search"
-            variant="outlined"
+            variant="standard"
             value={searchTerm}
             onChange={handleSearchChange}
             fullWidth
+            sx={{
+              color: "white",
+              "& .MuiInputBase-input": {
+                color: "white",
+              },
+            }}
           />
         </Box>
       ) : (

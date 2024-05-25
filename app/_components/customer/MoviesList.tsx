@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Container, Grid } from "@mui/material";
+import { Box, Typography, Container, Grid, useMediaQuery,useTheme } from "@mui/material";
 
 import MovieCard from "./MovieCard";
 import Header from "./Header";
@@ -14,9 +14,13 @@ interface MoviesListProps {
 }
 
 const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
+  
   const { state } = useProgramsContext();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,7 +67,16 @@ const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
   return (
     <>
       <Container
-        sx={{ position: "relative", backgroundColor: "#121f4d", mt: 4 }}
+        sx={{
+          position: "relative",
+          backgroundColor: "#121f4d",
+          mt: 2,
+          minHeight: "100vh",
+          paddingTop: "50px",
+          "@media (min-width:600px)": {
+            width: "90%",
+          },
+        }}
       >
         <Header
           movies={movies}
@@ -102,9 +115,12 @@ const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
             alignItems: "center",
             width: "95%",
             height: "470px",
-            overflowY: "scroll",
+            overflowY: "auto",
             whiteSpace: "nowrap",
             padding: "10px",
+            "@media (max-width:600px)": {
+              minHeight: "calc(100vh - 50px)",
+            },
           }}
         >
           <Box
@@ -113,12 +129,11 @@ const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
               gap: "5px",
               "@media (max-width:600px)": {
                 flexDirection: "column",
-                height: "260px",
                 width: "80%",
+                margin: "auto",
               },
             }}
           >
-            ,{" "}
             {filteredMovies.map((movie) => (
               <MovieCard
                 key={movie.Title}
@@ -129,6 +144,19 @@ const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
             ))}
           </Box>
         </Box>
+        {isSmallScreen&& 
+        <Box
+          sx={{
+            height: "40%",
+            width: "100%",
+            position: "absolute",
+            bottom: 0,
+            background: "linear-gradient(to top, black, transparent)",
+            
+          }}
+        ></Box>
+        }
+        
       </Container>
     </>
   );

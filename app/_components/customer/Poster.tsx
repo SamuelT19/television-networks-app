@@ -11,45 +11,50 @@ import posterM from "../../../public/movies/test-movie.jpg";
 import hboLogo from "../../../public/channels/hbo-logo.png";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import avatar from "../../../public/avatar_profile.jpg";
-import SearchIcon from "@mui/icons-material/Search";
 
 import Types from "./Types";
 import Image from "next/image";
-import Header from "./Header";
 
-function Poster() {
+interface PosterProps {
+  playedTime: number;
+  totalTime: number;
+}
+
+const Poster: React.FC<PosterProps> = ({ playedTime, totalTime }) => {
   const truncate = (str: string, n: number) => {
-    return str?.length > n ? str.substr(0, n - 1) + "..." : str;
+    return str?.length > n ? str.slice(0, n - 1) + "..." : str;
   };
 
-  const playedTime = 32 * 60 + 23;
-  const totalTime = 1 * 3600 + 32 * 60 + 23;
   const progress = (playedTime / totalTime) * 100;
 
   const description =
-    "In the small, fog-covered town of Raventhorne, strange occurrences have become a part of daily life. When a young journalist named Emily moves to the town to escape her past, she quickly finds herself entangled in its enigmatic allure. ";
+    "In the small, fog-covered town of Raventhorne, strange occurrences have become a part of daily life. When a young journalist named Emily moves to the town to escape her past, she quickly finds herself entangled in its enigmatic allure.";
 
   return (
     <Box
       flex={1}
       bgcolor="#121F4D"
       color="white"
-      sx={{ position: "relative", minHeight: "600px","@media (max-width:600px)": {
-        minHeight: "710px",
-      },}}
+      sx={{
+        position: "relative",
+        minHeight: "100vh",
+        "@media (max-width:600px)": {
+          minHeight: "90vh",
+        },
+      }}
     >
       <Box
         sx={{
           display: "flex",
           position: "relative",
-          height: "500px",
+          height: "60vh",
           marginBottom: 2,
           backgroundImage: `url(${posterM.src})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           color: "white",
           "@media (max-width:600px)": {
-            height:"370px",
+            height: "50vh",
           },
         }}
       >
@@ -84,16 +89,15 @@ function Poster() {
               </Typography>
             </Box>
 
-            <Avatar alt="Remy Sharp" src={avatar.src} />
-            <Box
+            <Avatar
+              alt="Remy Sharp"
+              src={avatar.src}
               sx={{
-                width: "50px",
-                borderRadius: "50%",
-                backgroundImage: `url(${avatar.src})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
+                "@media (max-width:600px)": {
+                  display: "none",
+                },
               }}
-            ></Box>
+            />
           </Box>
         </Container>
         <Box
@@ -149,7 +153,7 @@ function Poster() {
                 paddingLeft: 1,
                 paddingBottom: 1,
                 "@media (max-width:600px)": {
-                  width:"90%",
+                  width: "90%",
                 },
               }}
             >
@@ -174,7 +178,7 @@ function Poster() {
                   component="div"
                   sx={{ color: "white" }}
                 >
-                  32:23
+                  {new Date(playedTime * 1000).toISOString().substr(11, 8)}
                 </Typography>
                 <Typography
                   variant="subtitle1"
@@ -182,11 +186,17 @@ function Poster() {
                   component="div"
                   sx={{ marginLeft: "auto", color: "white" }}
                 >
-                  01:32:23
+                  {new Date(totalTime * 1000).toISOString().substr(11, 8)}
                 </Typography>
               </Box>
             </Box>
-            <Box>
+            <Box
+              sx={{
+                "@media (max-width:600px)": {
+                  display: "none",
+                },
+              }}
+            >
               <PlayCircleOutlineIcon
                 sx={{ marginLeft: 1, color: "white", fontSize: "40px", mt: -2 }}
               />
@@ -207,6 +217,6 @@ function Poster() {
       <Types />
     </Box>
   );
-}
+};
 
 export default Poster;

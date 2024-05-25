@@ -2,7 +2,7 @@
 import React from "react";
 
 import tMoviesLogo from "../../../public/t_movie_logo.png";
-import { Box, useTheme, useMediaQuery } from "@mui/material";
+import { Box} from "@mui/material";
 import Image from "next/image";
 import { ArrowBackIos } from "@mui/icons-material";
 import { usePathname, useRouter } from "next/navigation";
@@ -30,17 +30,17 @@ function LogoBack() {
   };
   return (
     <>
-      <Box
-        sx={{
-          position: "absolute",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#121f4d",
-          width: "15%",
-        }}
-      >
-        {currentPath !== "/tvNetworks" ? (
+      {currentPath !== "/tvNetworks" ? (
+        <Box
+          sx={{
+            position: "absolute",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#121f4d",
+            width: "13%",
+          }}
+        >
           <Box sx={{ height: "200px", pt: "50px" }}>
             <Box sx={iconStyles}>
               <Box
@@ -54,7 +54,18 @@ function LogoBack() {
               </Box>
             </Box>
           </Box>
-        ) : (
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            position: "absolute",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#121f4d",
+            width: "15%",
+          }}
+        >
           <Box sx={{ height: "200px", pt: "50px" }}>
             <Image
               src={tMoviesLogo}
@@ -63,8 +74,8 @@ function LogoBack() {
               alt="T-Movie Logo"
             />
           </Box>
-        )}
-      </Box>
+        </Box>
+      )}
     </>
   );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import AdminNav from "../_components/admin/AdminNav";
 import AdminMenu from "../_components/admin/AdminMenu";
-import { Box, Container } from "@mui/material";
+import { Box } from "@mui/material";
 import Dashboards from "../_components/admin/dashboard/Dashboards";
 
 const Dashboard: React.FC = () => {

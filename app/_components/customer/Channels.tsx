@@ -8,9 +8,9 @@ import abcLogo from "../../../public/channels/abc-logo.png";
 import disneyLogo from "../../../public/channels/disney-logo.png";
 import foxLogo from "../../../public/channels/fox-tv-logo.png";
 import cnnLogo from "../../../public/channels/cnn-logo.png";
-import espnLogo from "../../../public/channels/espn-logo.jpg";
-import netflixLogo from "../../../public/channels/netflix-logo.png";
-import nbcLogo from "../../../public/channels/nbc-logo-w.png";
+import espnLogo from "../../../public/channels/espn-hd-logo.png";
+import netflixLogo from "../../../public/channels/netflixx-logo.png";
+import nbcLogo from "../../../public/channels/nbc-logo.png";
 import bbcLogo from "../../../public/channels/bbc-logo.png";
 
 const channels = [
@@ -94,7 +94,7 @@ function Channels() {
         },
         "@media (max-width:600px)": {
           position: "absolute",
-          top: "367px",
+          top: "47vh",
           left: "4%",
           flexDirection: "row",
           height: "135px",
