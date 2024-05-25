@@ -16,6 +16,7 @@ import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import ProgramCount from "./ProgramCount";
 import ChannelCount from "./ChannelCount";
 import ProgramCategoryPieChart from "./ProgramCategoryPieChart";
+import ProgramTypeLineChart from "./ProgramTypeLineChart";
 
 interface DashboardCardProps {
   title: string;
@@ -148,7 +149,7 @@ const Dashboard: React.FC = () => {
         {/* Add more Grid items with DashboardCard as needed */}
       </Grid>
       <ProgramCategoryPieChart />
-      {/* <ProgramTypeLineChart/> */}
+      <ProgramTypeLineChart/>
       {/* <ChartsPage/> */}
     </Box>
   );
