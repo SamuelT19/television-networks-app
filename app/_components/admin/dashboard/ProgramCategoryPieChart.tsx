@@ -25,26 +25,25 @@ const ProgramCategoryPieChart = () => {
 
   const [programData, setProgramData] = useState<Program[]>([]);
 
+  const fetchPrograms = async () => {
+    try {
+      const response = await axiosBase.get("/api/programs");
+      setProgramData(response.data);
+    } catch (error) {
+      console.error("Error fetching program categories:", error);
+    }
+  };
+  
   useEffect(() => {
-    axiosBase
-      .get("/api/programs")
-      .then((response) => {
-        setProgramData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching program categories:", error);
-      });
-
-    socket.on("updatePrograms", (data) => {
-      setProgramData(data);
-    });
-
+    fetchPrograms();
+  
+    socket.on("updatePrograms", fetchPrograms);
+  
     return () => {
-      socket.off("updatePrograms", (data) => {
-        setProgramData(data);
-      });
+      socket.off("updatePrograms", fetchPrograms);
     };
   }, []);
+  
 
   const getCategoryCounts = () => {
     const categoryCounts = new Map<string, number>();

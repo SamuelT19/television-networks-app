@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 export const ProgramSchema = z.object({
-  id:z.number().positive(),
+  id:z.number().positive().optional(),
   title: z.string().min(1),
-  duration: z.string().min(1),
+  duration: z.number().positive(),
   description: z.string().min(1),
   channelId: z.number().positive(),
   typeId: z.number().positive(),

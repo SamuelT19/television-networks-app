@@ -126,7 +126,10 @@ const ProgramManagement = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setNewProgram({ ...newProgram, [name]: value });
+    setNewProgram({
+      ...newProgram,
+      [name]: name === "duration" ? Number(value) : value,
+    });
   };
 
   const handleSelectChange = (event: SelectChangeEvent<number>) => {
@@ -136,18 +139,14 @@ const ProgramManagement = () => {
 
   const handleSaveProgram = async () => {
     const validationErrors = validateProgram(newProgram);
+    console.log(validationErrors);
     if (Object.values(validationErrors).some((error) => error)) {
       setValidationErrors(validationErrors);
       return;
     }
 
     setIsSaving(true);
-    if (newProgram.duration) {
-      newProgram.duration = parseInt(
-        newProgram.duration as string,
-        10
-      ).toString();
-    }
+
     console.log(newProgram);
 
     try {
@@ -224,7 +223,10 @@ const ProgramManagement = () => {
                     <Tooltip title="Delete">
                       <IconButton
                         color="error"
-                        onClick={() => handleDeleteProgram(program.id)}
+                        onClick={() =>
+                          program.id !== undefined &&
+                          handleDeleteProgram(program.id)
+                        }
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -262,7 +264,7 @@ const ProgramManagement = () => {
                 variant="standard"
                 name="duration"
                 type="number"
-                value={newProgram.duration || ""}
+                value={newProgram.duration?.toString() || ""}
                 onChange={handleChange}
                 error={!!validationErrors?.duration}
                 helperText={validationErrors?.duration}
