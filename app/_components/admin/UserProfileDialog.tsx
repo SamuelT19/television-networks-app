@@ -3,7 +3,6 @@
 import React from "react";
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
   Avatar,
@@ -26,7 +25,7 @@ const UserProfileDialog: React.FC<UserProfileDialogProps> = ({
   const { state } = useProgramsContext();
 
   const { user } = state;
-  
+
   const router = useRouter();
 
   const handleLogout = () => {

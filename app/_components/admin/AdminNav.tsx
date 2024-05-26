@@ -28,7 +28,7 @@ function AdminNav({ title }: { title: string }) {
         display: "flex",
         height: "50px",
         boxShadow: "0px 4px 5px 0px rgba(0, 0, 0, 0.2)",
-        zIndex: 10,
+        zIndex: 1000,
       }}
     >
       <Box

@@ -29,7 +29,8 @@ interface Channel {
   name: string;
 }
 
-const ENDPOINT = process.env.TV_APP_BACKEND_URL || "http://localhost:5000/";
+const ENDPOINT = process.env.TV_APP_BACKEND_URL || "https://tv-networks-server.onrender.com";
+
 const socket = io(ENDPOINT);
 
 const ChannelManagement = () => {

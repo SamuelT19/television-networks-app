@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import io from "socket.io-client";
 
-const ENDPOINT = process.env.TV_APP_BACKEND_URL || "http://localhost:5000/";
+const ENDPOINT = process.env.TV_APP_BACKEND_URL || "https://tv-networks-server.onrender.com";
 
 const socket = io(ENDPOINT);
 

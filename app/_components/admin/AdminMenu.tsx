@@ -34,6 +34,7 @@ function AdminMenu() {
         textAlign: "start",
         p: 0,
         mt: 1,
+        zIndex:10
       }}
     >
       <Link href="/dashboard" passHref>
