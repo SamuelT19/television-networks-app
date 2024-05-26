@@ -1,8 +1,5 @@
 import React from "react";
 import {
-  Card,
-  CardContent,
-  Typography,
   Button,
   Grid,
   Box,
@@ -12,55 +9,12 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import IosShareIcon from "@mui/icons-material/IosShare";
-import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import ProgramCount from "./ProgramCount";
 import ChannelCount from "./ChannelCount";
 import ProgramCategoryPieChart from "./ProgramCategoryPieChart";
 import ProgramTypeLineChart from "./ProgramTypeLineChart";
+import UserCount from "./UserCount";
 
-interface DashboardCardProps {
-  title: string;
-  value: string;
-  change: string;
-}
-
-const DashboardCard: React.FC<DashboardCardProps> = ({
-  title,
-  value,
-  change,
-}) => {
-  return (
-    <Card sx={{ marginBottom: 2, boxShadow: 3, position: "relative" }}>
-      <Box
-        sx={{
-          position: "absolute",
-          top: 12,
-          right: 12,
-          backgroundColor: "#053d75",
-          color: "#fff",
-          p: 1.5,
-          borderRadius: "6px",
-        }}
-      >
-        <PeopleOutlineIcon
-          sx={{
-            color: "#fff",
-          }}
-        />
-      </Box>
-
-      <CardContent>
-        <Typography variant="h5" component="div">
-          {title}
-        </Typography>
-        <Typography color="textSecondary" sx={{ marginBottom: 1.5 }}>
-          {value}
-        </Typography>
-        <Typography variant="body2">{change}</Typography>
-      </CardContent>
-    </Card>
-  );
-};
 
 const Dashboard: React.FC = () => {
   return (
@@ -133,11 +87,7 @@ const Dashboard: React.FC = () => {
       </Grid>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={4}>
-          <DashboardCard
-            title="System User"
-            value="37"
-            change="+12% This Month"
-          />
+          <UserCount/>
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <ProgramCount />

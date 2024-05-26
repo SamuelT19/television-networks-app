@@ -8,7 +8,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Icon,
   IconButton,
   TextField,
   Tooltip,

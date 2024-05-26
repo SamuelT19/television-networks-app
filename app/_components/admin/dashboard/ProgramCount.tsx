@@ -2,9 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
-import { Box, Card, CardContent, Typography } from '@mui/material';
 import axiosBase from '@/app/endPoints/axios';
-import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
+import DashboardCountCard from './DashboardCountCard';
 
 const ENDPOINT = process.env.TV_APP_BACKEND_URL || "http://localhost:5000/";
 
@@ -33,35 +32,12 @@ const ProgramCount: React.FC = () => {
   }, []);
 
   return (
-    <Card sx={{ marginBottom: 2, boxShadow: 3, position: "relative" }}>
-    <Box
-      sx={{
-        position: "absolute",
-        top: 12,
-        right: 12,
-        backgroundColor: "#053d75",
-        color: "#fff",
-        p: 1.5,
-        borderRadius: "6px"
-      }}
-    >
-      <PeopleOutlineIcon
-        sx={{
-          color: "#fff",
-        }}
-      />
-    </Box>
-
-    <CardContent>
-      <Typography variant="h5" component="div">
-        Programs
-      </Typography>
-      <Typography color="textSecondary" sx={{ marginBottom: 1.5 }}>
-        {programCount}
-      </Typography>
-      <Typography variant="body2">+12% This Month(fake)</Typography>
-    </CardContent>
-  </Card>
+   
+  <DashboardCountCard
+  title="Programs"
+  value={programCount}
+  change="+12% This Month"
+/>
   );
 };
 

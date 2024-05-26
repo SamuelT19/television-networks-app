@@ -1,7 +1,15 @@
-'use client'
+"use client";
 
 import React from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Avatar, Typography, Button } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Avatar,
+  Typography,
+  Button,
+} from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useProgramsContext } from "@/app/context/ProgramsContext";
 
@@ -10,17 +18,25 @@ interface UserProfileDialogProps {
   onClose: () => void;
 }
 
-const UserProfileDialog: React.FC<UserProfileDialogProps> = ({ open, onClose }) => {
+const UserProfileDialog: React.FC<UserProfileDialogProps> = ({
+  open,
+  onClose,
+}) => {
 
-  const {state} = useProgramsContext();
+  const { state } = useProgramsContext();
 
-    const router = useRouter();
+  const { user } = state;
+  
+  const router = useRouter();
 
-    const handleLogout = () => {
-      router.push("/login");
-    };
+  const handleLogout = () => {
+    router.push("/login");
+  };
   return (
-    <Dialog open={open} onClose={onClose} PaperProps={{
+    <Dialog
+      open={open}
+      onClose={onClose}
+      PaperProps={{
         sx: {
           position: "absolute",
           top: 10,
@@ -28,14 +44,22 @@ const UserProfileDialog: React.FC<UserProfileDialogProps> = ({ open, onClose }) 
           margin: 0,
           minWidth: "200px",
         },
-      }}>
-      <DialogContent sx={{display: 'flex',flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
+      }}
+    >
+      <DialogContent
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Avatar sx={{ width: 56, height: 56, marginBottom: "8px" }} />
         <Typography variant="h6" sx={{ marginBottom: "8px" }}>
-        {state.user ? state.user.username : ""}
+          {user ? user.username : ""}
         </Typography>
         <Typography variant="body2" sx={{ marginBottom: "16px" }}>
-        {state.user ? state.user.email : ""}
+          {user ? user.email : ""}
         </Typography>
       </DialogContent>
       <DialogActions>
