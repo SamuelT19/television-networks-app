@@ -1,14 +1,17 @@
 import { z } from 'zod';
 
 export const ProgramSchema = z.object({
-  id: z.number().positive().optional(),
-  title: z.string().min(1).optional(),
-  duration: z.number().positive().optional(),
-  description: z.string().min(1).optional(),
-  channelId: z.number().positive().optional(),
-  typeId: z.number().positive().optional(),
-  categoryId: z.number().positive().optional(),
-  videoUrl: z.string().url().optional(),
+  id:z.number().positive(),
+  title: z.string().min(1),
+  duration: z.string().min(1),
+  description: z.string().min(1),
+  channelId: z.number().positive(),
+  typeId: z.number().positive(),
+  categoryId: z.number().positive(),
+  videoUrl: z.string().url(),
+  categoryName:z.string().optional(),
+  typeName:z.string().optional(),
+  channelName:z.string().optional(),
 });
 
 export type Program = z.infer<typeof ProgramSchema>;
