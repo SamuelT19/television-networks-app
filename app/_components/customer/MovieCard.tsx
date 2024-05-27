@@ -7,7 +7,13 @@ import {
   IconButton,
   Box,
 } from "@mui/material";
-import { Favorite, WatchLater, PlayCircle } from "@mui/icons-material";
+import {
+  Favorite,
+  WatchLater,
+  PlayCircle,
+  FavoriteBorder,
+  AccessTime,
+} from "@mui/icons-material";
 import { useProgramsContext } from "@/app/context/ProgramsContext";
 
 interface MovieCardProps {
@@ -40,7 +46,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, length, poster }) => {
           filter: "brightness(0.8)",
         },
         "@media (max-width: 600px)": {
-          position:"relative",
+          position: "relative",
           width: "100%",
         },
         backgroundImage: `url(${poster})`,
@@ -64,7 +70,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, length, poster }) => {
             backgroundColor: "rgba(0, 0, 0, 0.6)",
             padding: "4px 8px",
             borderRadius: 1,
-            color:"white"
+            color: "white",
           }}
         >
           {length}
@@ -78,25 +84,32 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, length, poster }) => {
       <CardActions
         sx={{
           justifyContent: "center",
-          backgroundColor: "rgba(0, 0, 0, 0.6)", 
+          backgroundColor: "rgba(0, 0, 0, 0.6)",
           borderRadius: "0 0 4px 4x",
           "@media (max-width: 600px)": {
-            position:"absolute",
-            right:0,
-            top:0,
-            bottom:0,
-            width:"80px",
-            flexDirection: "column", 
+            position: "absolute",
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: "80px",
+            flexDirection: "column",
             justifyContent: "center",
           },
         }}
       >
         <IconButton aria-label="add to favorites" onClick={handleFavoriteClick}>
-          <Favorite color={isFavorite ? "error" : "inherit"} />
+          {isFavorite ? (
+            <Favorite color="error" />
+          ) : (
+            <FavoriteBorder sx={{ color: "white" }} />
+          )}
         </IconButton>
         <IconButton aria-label="watch later" onClick={handleWatchLaterClick}>
-          <WatchLater color={isWatchLater ? "primary" : "inherit"} />
-
+          {isWatchLater ? (
+            <WatchLater color={isWatchLater ? "primary" : "inherit"} />
+          ) : (
+            <AccessTime sx={{ color: "white" }} />
+          )}
         </IconButton>
         <IconButton aria-label="play">
           <PlayCircle />
