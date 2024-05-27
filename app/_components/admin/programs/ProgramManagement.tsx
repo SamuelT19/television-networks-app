@@ -171,11 +171,11 @@ const ProgramManagement = () => {
   };
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box sx={{ position: "relative" ,overflow: "auto", maxWidth: "calc(100vw - 15vw)"}}>
       {isLoading ? (
         <Typography>Loading...</Typography>
       ) : (
-        <Box sx={{ overflow: "auto", maxWidth: "calc(100vw - 15vw)" }}>
+        <Box>
           <Button
             variant="contained"
             color="primary"

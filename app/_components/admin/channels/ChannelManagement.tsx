@@ -29,8 +29,7 @@ interface Channel {
   name: string;
 }
 
-const ENDPOINT =
-  process.env.TV_APP_BACKEND_URL || "http://localhost:5000";
+const ENDPOINT = process.env.TV_APP_BACKEND_URL || "http://localhost:5000";
 
 const socket = io(ENDPOINT);
 
@@ -130,7 +129,13 @@ const ChannelManagement = () => {
   };
 
   return (
-    <Box sx={{ position: "relative", overflow: "auto", maxWidth: "calc(100vw - 15vw)" }}>
+    <Box
+      sx={{
+        position: "relative",
+        overflow: "auto",
+        maxWidth: "calc(100vw - 15vw)",
+      }}
+    >
       {isLoading ? (
         <Box>Loading...</Box>
       ) : (
@@ -141,8 +146,9 @@ const ChannelManagement = () => {
               color="primary"
               onClick={() => handleOpen()}
               sx={{ position: "absolute", top: 0, zIndex: 10 }}
+              startIcon={<AddIcon />}
             >
-              <AddIcon /> Add Channel
+              Add Channel
             </Button>
             <MaterialReactTable
               columns={[
