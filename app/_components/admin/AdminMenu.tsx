@@ -24,6 +24,13 @@ function AdminMenu() {
 
   return (
     <Box
+    sx={{
+      width: "15%",
+      boxShadow: "10px 0px 5px -5px rgba(0, 0, 0, 0.2)",
+      minHeight:"100vh"
+    }}
+  >
+    <Box
       sx={{
         position:"fixed",
         top:50,
@@ -64,6 +71,7 @@ function AdminMenu() {
           Programs
         </Button>
       </Link>
+    </Box>
     </Box>
   );
 }
