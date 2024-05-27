@@ -171,7 +171,11 @@ const ProgramManagement = () => {
   };
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box sx={{
+      position: "relative",
+      overflow: "auto",
+      maxWidth: "calc(100vw - 15vw)",
+    }}>
       {isLoading ? (
         <Typography>Loading...</Typography>
       ) : (
@@ -185,7 +189,6 @@ const ProgramManagement = () => {
           >
             Add Program
           </Button>
-          {/* </Box> */}
           {isError && <Typography color="error">Error loading data</Typography>}
           <MaterialReactTable
             columns={[

@@ -130,7 +130,13 @@ const ChannelManagement = () => {
   };
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box
+      sx={{
+        position: "relative",
+        overflow: "auto",
+        maxWidth: "calc(100vw - 15vw)",
+      }}
+    >
       {isLoading ? (
         <div>Loading...</div>
       ) : (
@@ -141,8 +147,9 @@ const ChannelManagement = () => {
               color="primary"
               onClick={() => handleOpen()}
               sx={{ position: "absolute", top: 0, zIndex: 10 }}
+              startIcon={<AddIcon />}
             >
-              <AddIcon /> Add Channel
+              Add Channel
             </Button>
             <MaterialReactTable
               columns={[
@@ -186,7 +193,7 @@ const ChannelManagement = () => {
                 />
                 {validationError && (
                   <p style={{ color: "red" }}>{validationError}</p>
-                )}{" "}
+                )}
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
