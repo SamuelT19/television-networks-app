@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React from "react";
 import AdminNav from "../_components/admin/AdminNav";
@@ -25,14 +25,7 @@ const Dashboard: React.FC = () => {
         <AdminNav title="Dashboard" />
       </Box>
       <Box sx={{ display: "flex" }}>
-        <Box
-          sx={{
-            width: "15%",
-            boxShadow: "10px 0px 5px -5px rgba(0, 0, 0, 0.2)",
-          }}
-        >
-          <AdminMenu />
-        </Box>
+        <AdminMenu />
         <Box sx={{ flex: 1 }}>
           <Dashboards />
         </Box>

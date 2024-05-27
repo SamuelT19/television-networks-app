@@ -206,6 +206,7 @@ const ProgramManagement = () => {
               {
                 header: "Actions",
                 accessorKey: "actions",
+                size: 6,
                 Cell: ({ row }) => (
                   <TableCell>
                     <Tooltip title="Edit">

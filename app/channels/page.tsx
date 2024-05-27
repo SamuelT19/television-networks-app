@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React from "react";
 import AdminNav from "../_components/admin/AdminNav";
@@ -9,16 +9,15 @@ import { useRouter } from "next/navigation";
 import { useProgramsContext } from "../context/ProgramsContext";
 
 const Channel: React.FC = () => {
-
   const { state } = useProgramsContext();
 
   const { user } = state;
 
-  const router = useRouter(); 
+  const router = useRouter();
 
   if (!user) {
     router.push("/login");
-    return null; 
+    return null;
   }
 
   return (
@@ -26,15 +25,8 @@ const Channel: React.FC = () => {
       <Box>
         <AdminNav title="Channels" />
       </Box>
-      <Box sx={{ display: "flex", height: "100vh" }}>
-        <Box
-          sx={{
-            width: "15%",
-            boxShadow: "10px 0px 5px -5px rgba(0, 0, 0, 0.2)",
-          }}
-        >
-          <AdminMenu />
-        </Box>
+      <Box sx={{ display: "flex" }}>
+        <AdminMenu />
         <Box sx={{ flex: 1, margin: " 10px 30px" }}>
           <ChannelManagement />
         </Box>
