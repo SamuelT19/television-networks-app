@@ -21,7 +21,7 @@ import { io } from "socket.io-client";
 
 const channelSchema = z.object({
   id: z.number(),
-  name: z.string().min(1),
+  name: z.string().min(1).max(20),
 });
 
 interface Channel {
@@ -132,7 +132,7 @@ const ChannelManagement = () => {
   return (
     <Box sx={{ position: "relative" }}>
       {isLoading ? (
-        <div>Loading...</div>
+        <Box>Loading...</Box>
       ) : (
         <>
           <Box sx={{ position: "relative" }}>
