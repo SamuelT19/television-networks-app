@@ -24,10 +24,10 @@ const UserCount: React.FC = () => {
 
     fetchUserCount();
 
-    socket.on('updateUsers', fetchUserCount);
+    socket.on('usersUpdated', fetchUserCount);
 
     return () => {
-      socket.off('updateUsers', fetchUserCount);
+      socket.off('usersUpdated', fetchUserCount);
     };
   }, []);
 

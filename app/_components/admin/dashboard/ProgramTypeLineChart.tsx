@@ -121,10 +121,10 @@ const ProgramTypeLineChart: React.FC = () => {
 
     fetchProgramData();
 
-    socket.on("updatePrograms", handleProgramDataUpdate);
+    socket.on("programsUpdated", handleProgramDataUpdate);
 
     return () => {
-      socket.off("updatePrograms", handleProgramDataUpdate);
+      socket.off("programsUpdated", handleProgramDataUpdate);
     };
   }, []);
 

@@ -24,10 +24,10 @@ const ChannelCount: React.FC = () => {
 
     fetchChannelCount();
 
-    socket.on("updateChannels", fetchChannelCount);
+    socket.on("channelsUpdated", fetchChannelCount);
 
     return () => {
-      socket.off("updateChannels", fetchChannelCount);
+      socket.off("channelsUpdated", fetchChannelCount);
     };
   }, []);
 

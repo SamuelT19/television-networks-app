@@ -15,7 +15,7 @@ interface Program {
   categoryName: string;
 }
 
-const ProgramCategoryPieChart = () => {
+const ProgramCategoryPieChart: React.FC = () => {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#AF19FF"];
   const categories = [
     { id: 1, name: "Recommended" },
@@ -24,26 +24,28 @@ const ProgramCategoryPieChart = () => {
   ];
 
   const [programData, setProgramData] = useState<Program[]>([]);
+  const [isError, setIsError] = useState<boolean>(false);
 
   const fetchPrograms = async () => {
     try {
       const response = await axiosBase.get("/api/programs");
       setProgramData(response.data);
+      setIsError(false);
     } catch (error) {
       console.error("Error fetching program categories:", error);
+      setIsError(true);
     }
   };
-  
+
   useEffect(() => {
     fetchPrograms();
-  
-    socket.on("updatePrograms", fetchPrograms);
-  
+
+    socket.on("programsUpdated", fetchPrograms);
+
     return () => {
-      socket.off("updatePrograms", fetchPrograms);
+      socket.off("programsUpdated", fetchPrograms);
     };
   }, []);
-  
 
   const getCategoryCounts = () => {
     const categoryCounts = new Map<string, number>();
@@ -83,66 +85,70 @@ const ProgramCategoryPieChart = () => {
           Programs by Category
         </Typography>
 
-        <Box
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <ResponsiveContainer width="50%" height={350}>
-            <PieChart>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                innerRadius={80}
-                outerRadius={100}
-                paddingAngle={5}
-                fill="#8884d8"
-                dataKey="count"
-                label
-              >
-                {data.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
+        {isError ? (
+          <Typography color="error">Error loading data</Typography>
+        ) : (
+          <Box
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <ResponsiveContainer width="50%" height={350}>
+              <PieChart>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={80}
+                  outerRadius={100}
+                  paddingAngle={5}
+                  fill="#8884d8"
+                  dataKey="count"
+                  label
+                >
+                  {data.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
 
-          <Box>
-            <Typography variant="h5" component="h6" color="black" mb="4">
-              Total Programs
-            </Typography>
-            {data.map((entry, index) => (
-              <Box
-                key={index}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "10px",
-                }}
-              >
-                <div
+            <Box>
+              <Typography variant="h5" component="h6" color="black" mb="4">
+                Total Programs
+              </Typography>
+              {data.map((entry, index) => (
+                <Box
+                  key={index}
                   style={{
-                    width: "20px",
-                    height: "20px",
-                    borderRadius: "50%",
-                    backgroundColor: COLORS[index % COLORS.length],
-                    marginRight: "10px",
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "10px",
                   }}
-                ></div>
-                <span>
-                  {entry.name}: {entry.count}
-                </span>
-              </Box>
-            ))}
+                >
+                  <div
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      borderRadius: "50%",
+                      backgroundColor: COLORS[index % COLORS.length],
+                      marginRight: "10px",
+                    }}
+                  ></div>
+                  <span>
+                    {entry.name}: {entry.count}
+                  </span>
+                </Box>
+              ))}
+            </Box>
           </Box>
-        </Box>
+        )}
       </CardContent>
     </Card>
   );

@@ -52,11 +52,11 @@ const LoginForm: React.FC = () => {
         username,
         password,
       });
-      if (response.data.success) {
+      if (!response?.data?.success) {
+        setError("Invalid username or password");
+      } else {
         dispatch({ type: "SET_USER", payload: response.data.user });
         router.push("/dashboard");
-      } else {
-        setError("Invalid username or password");
       }
     } catch (error) {
       console.error("Login failed:", error);
@@ -87,7 +87,7 @@ const LoginForm: React.FC = () => {
         <Typography variant="body2" color="error">
           {error}
         </Typography>
-      )}{" "}
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="username"

@@ -24,10 +24,10 @@ const ProgramCount: React.FC = () => {
 
     fetchProgramCount();
 
-    socket.on('updatePrograms', fetchProgramCount);
+    socket.on('programsUpdated', fetchProgramCount);
 
     return () => {
-      socket.off('updatePrograms', fetchProgramCount);
+      socket.off('programsUpdated', fetchProgramCount);
     };
   }, []);
 

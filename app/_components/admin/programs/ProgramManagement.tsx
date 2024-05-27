@@ -148,8 +148,6 @@ const ProgramManagement = () => {
 
     setIsSaving(true);
 
-    console.log(newProgram);
-
     try {
       if (editingProgram) {
         await axiosBase.put(`/api/programs/${editingProgram.id}`, newProgram);
