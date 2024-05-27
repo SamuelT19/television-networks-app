@@ -133,7 +133,7 @@ const ProgramTypeLineChart: React.FC = () => {
     <Card
       sx={{
         marginTop: "20px",
-        boxShadow: "4px 4px 2px 4px rgba(0, 0, 0, 0.2)",
+        boxShadow: "2px 2px 5px 5px rgba(0, 0, 0, 0.2)",
       }}
     >
       <CardContent>

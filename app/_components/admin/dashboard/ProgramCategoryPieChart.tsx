@@ -6,7 +6,8 @@ import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import io from "socket.io-client";
 
-const ENDPOINT = process.env.TV_APP_BACKEND_URL || "https://tv-networks-server.onrender.com";
+const ENDPOINT =
+  process.env.TV_APP_BACKEND_URL || "https://tv-networks-server.onrender.com";
 
 const socket = io(ENDPOINT);
 
@@ -68,7 +69,7 @@ const ProgramCategoryPieChart: React.FC = () => {
   const data = getCategoryCounts();
 
   return (
-    <Card sx={{ boxShadow: "4px 4px 2px 4px rgba(0, 0, 0, 0.2)" }}>
+    <Card sx={{ boxShadow: "2px 2px 5px 5px rgba(0, 0, 0, 0.2)" }}>
       <CardContent>
         <Typography
           variant="h5"
