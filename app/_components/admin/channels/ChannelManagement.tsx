@@ -130,7 +130,7 @@ const ChannelManagement = () => {
   };
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box sx={{ position: "relative", overflow: "auto", maxWidth: "calc(100vw - 15vw)" }}>
       {isLoading ? (
         <Box>Loading...</Box>
       ) : (

@@ -175,7 +175,7 @@ const ProgramManagement = () => {
       {isLoading ? (
         <Typography>Loading...</Typography>
       ) : (
-        <>
+        <Box sx={{ overflow: "auto", maxWidth: "calc(100vw - 15vw)" }}>
           <Button
             variant="contained"
             color="primary"
@@ -353,7 +353,7 @@ const ProgramManagement = () => {
               </Button>
             </DialogActions>
           </Dialog>
-        </>
+        </Box>
       )}
     </Box>
   );
