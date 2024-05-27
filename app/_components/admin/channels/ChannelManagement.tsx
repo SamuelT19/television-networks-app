@@ -134,6 +134,7 @@ const ChannelManagement = () => {
         position: "relative",
         overflow: "auto",
         maxWidth: "calc(100vw - 15vw)",
+        boxShadow: "2px 2px 10px 5px rgba(0, 0, 0, 0.2)"
       }}
     >
       {isLoading ? (
