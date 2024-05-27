@@ -4,32 +4,27 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   FormControl,
   Grid,
-  IconButton,
   InputLabel,
   MenuItem,
   Select,
   TextField,
-  Tooltip,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   SelectChangeEvent,
+  TableCell,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
+import axiosBase from "@/app/endPoints/axios";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import axiosBase from "@/app/endPoints/axios";
+import AddIcon from "@mui/icons-material/Add";
+import { MaterialReactTable } from "material-react-table";
 import { validateProgram, Program } from "./programType";
 import io from "socket.io-client";
 
@@ -140,7 +135,6 @@ const ProgramManagement = () => {
 
   const handleSaveProgram = async () => {
     const validationErrors = validateProgram(newProgram);
-    console.log(validationErrors);
     if (Object.values(validationErrors).some((error) => error)) {
       setValidationErrors(validationErrors);
       return;
@@ -154,7 +148,7 @@ const ProgramManagement = () => {
       } else {
         await axiosBase.post("/api/programs", newProgram);
       }
-      socket.emit("updatePrograms");
+      socket.emit("programsUpdated");
       handleCloseDialog();
     } catch (error) {
       console.error("Error saving program:", error);
@@ -168,7 +162,7 @@ const ProgramManagement = () => {
     if (window.confirm("Are you sure you want to delete this program?")) {
       try {
         await axiosBase.delete(`/api/programs/${id}`);
-        socket.emit("updatePrograms");
+        socket.emit("programsUpdated");
       } catch (error) {
         console.error("Error deleting program:", error);
         setIsError(true);
@@ -177,45 +171,40 @@ const ProgramManagement = () => {
   };
 
   return (
-    <Container>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => handleOpenDialog()}
-      >
-        Create New Program
-      </Button>
-      {isError && <Typography color="error">Error loading data</Typography>}
+    <Box sx={{ position: "relative" }}>
       {isLoading ? (
         <Typography>Loading...</Typography>
       ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Id</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Duration</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Channel</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {programs.map((program) => (
-                <TableRow key={program.id}>
-                  <TableCell>{program.id}</TableCell>
-                  <TableCell>{program.title}</TableCell>
-                  <TableCell>{program.duration}</TableCell>
-                  <TableCell>{program.description}</TableCell>
-                  <TableCell>{program.channelName}</TableCell>
-                  <TableCell>{program.typeName}</TableCell>
-                  <TableCell>{program.categoryName}</TableCell>
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleOpenDialog()}
+            sx={{ position: "absolute", top: 0, zIndex: 10 }}
+            startIcon={<AddIcon />}
+          >
+            Add Program
+          </Button>
+          {/* </Box> */}
+          {isError && <Typography color="error">Error loading data</Typography>}
+          <MaterialReactTable
+            columns={[
+              { header: "Id", accessorKey: "id", size: 5 },
+              { header: "Title", accessorKey: "title", size: 5 },
+              { header: "Duration", accessorKey: "duration", size: 5 },
+              { header: "Description", accessorKey: "description", size: 5 },
+              { header: "Channel", accessorKey: "channelName", size: 5 },
+              { header: "Type", accessorKey: "typeName", size: 5 },
+              { header: "Category", accessorKey: "categoryName", size: 5 },
+              {
+                header: "Actions",
+                accessorKey: "actions",
+                Cell: ({ row }) => (
                   <TableCell>
                     <Tooltip title="Edit">
-                      <IconButton onClick={() => handleOpenDialog(program)}>
+                      <IconButton
+                        onClick={() => handleOpenDialog(row.original)}
+                      >
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
@@ -223,147 +212,150 @@ const ProgramManagement = () => {
                       <IconButton
                         color="error"
                         onClick={() =>
-                          program.id !== undefined &&
-                          handleDeleteProgram(program.id)
+                          row.original.id !== undefined &&
+                          handleDeleteProgram(row.original.id)
                         }
                       >
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
                   </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+                ),
+              },
+            ]}
+            data={programs}
+          />
 
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>
-          {editingProgram ? "Edit Program" : "Create New Program"}
-        </DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Title"
-                variant="standard"
-                name="title"
-                value={newProgram.title || ""}
-                onChange={handleChange}
-                error={!!validationErrors?.title}
-                helperText={validationErrors?.title}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Duration"
-                variant="standard"
-                name="duration"
-                type="number"
-                value={newProgram.duration?.toString() || ""}
-                onChange={handleChange}
-                error={!!validationErrors?.duration}
-                helperText={validationErrors?.duration}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Description"
-                variant="standard"
-                name="description"
-                value={newProgram.description || ""}
-                onChange={handleChange}
-                error={!!validationErrors?.description}
-                helperText={validationErrors?.description}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                fullWidth
-                label="Video URL"
-                variant="standard"
-                name="videoUrl"
-                type="url"
-                value={newProgram.videoUrl || ""}
-                onChange={handleChange}
-                error={!!validationErrors?.videoUrl}
-                helperText={validationErrors?.videoUrl}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel id="channel-select-label">Channels</InputLabel>
-                <Select
-                  labelId="channel-select-label"
-                  name="channelId"
-                  value={newProgram.channelId || ""}
-                  onChange={handleSelectChange}
-                  label="Channels"
-                >
-                  {channels.map((channel) => (
-                    <MenuItem key={channel.id} value={channel.id}>
-                      {channel.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={6}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel id="type-select-label">Types</InputLabel>
-                <Select
-                  labelId="type-select-label"
-                  name="typeId"
-                  value={newProgram.typeId || ""}
-                  onChange={handleSelectChange}
-                  label="Types"
-                >
-                  {types.map((type) => (
-                    <MenuItem key={type.id} value={type.id}>
-                      {type.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={6}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel id="category-select-label">Categories</InputLabel>
-                <Select
-                  labelId="category-select-label"
-                  name="categoryId"
-                  value={newProgram.categoryId || ""}
-                  onChange={handleSelectChange}
-                  label="Categories"
-                >
-                  {categories.map((category) => (
-                    <MenuItem key={category.id} value={category.id}>
-                      {category.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSaveProgram}
-            color="primary"
-            disabled={isSaving}
-          >
-            {isSaving ? "Saving..." : "Save"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>
+              {editingProgram ? "Edit Program" : "Create New Program"}
+            </DialogTitle>
+            <DialogContent>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Title"
+                    variant="standard"
+                    name="title"
+                    value={newProgram.title || ""}
+                    onChange={handleChange}
+                    error={!!validationErrors?.title}
+                    helperText={validationErrors?.title}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Duration"
+                    variant="standard"
+                    name="duration"
+                    type="number"
+                    value={newProgram.duration?.toString() || ""}
+                    onChange={handleChange}
+                    error={!!validationErrors?.duration}
+                    helperText={validationErrors?.duration}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Description"
+                    variant="standard"
+                    name="description"
+                    value={newProgram.description || ""}
+                    onChange={handleChange}
+                    error={!!validationErrors?.description}
+                    helperText={validationErrors?.description}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    fullWidth
+                    label="Video URL"
+                    variant="standard"
+                    name="videoUrl"
+                    type="url"
+                    value={newProgram.videoUrl || ""}
+                    onChange={handleChange}
+                    error={!!validationErrors?.videoUrl}
+                    helperText={validationErrors?.videoUrl}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="channel-select-label">Channels</InputLabel>
+                    <Select
+                      labelId="channel-select-label"
+                      name="channelId"
+                      value={newProgram.channelId || ""}
+                      onChange={handleSelectChange}
+                      label="Channels"
+                    >
+                      {channels.map((channel) => (
+                        <MenuItem key={channel.id} value={channel.id}>
+                          {channel.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="type-select-label">Types</InputLabel>
+                    <Select
+                      labelId="type-select-label"
+                      name="typeId"
+                      value={newProgram.typeId || ""}
+                      onChange={handleSelectChange}
+                      label="Types"
+                    >
+                      {types.map((type) => (
+                        <MenuItem key={type.id} value={type.id}>
+                          {type.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormControl fullWidth variant="outlined">
+                    <InputLabel id="category-select-label">
+                      Categories
+                    </InputLabel>
+                    <Select
+                      labelId="category-select-label"
+                      name="categoryId"
+                      value={newProgram.categoryId || ""}
+                      onChange={handleSelectChange}
+                      label="Categories"
+                    >
+                      {categories.map((category) => (
+                        <MenuItem key={category.id} value={category.id}>
+                          {category.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} color="secondary">
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSaveProgram}
+                color="primary"
+                disabled={isSaving}
+              >
+                {isSaving ? "Saving..." : "Save"}
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      )}
+    </Box>
   );
 };
 

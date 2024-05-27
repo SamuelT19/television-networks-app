@@ -21,7 +21,7 @@ import { io } from "socket.io-client";
 
 const channelSchema = z.object({
   id: z.number(),
-  name: z.string().min(1),
+  name: z.string().min(1).max(20),
 });
 
 interface Channel {
