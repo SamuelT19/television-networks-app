@@ -25,7 +25,7 @@ function AdminMenu() {
   return (
     <Box
     sx={{
-      width: "15%",
+      minWidth: "15%",
       boxShadow: "10px 0px 5px -5px rgba(0, 0, 0, 0.2)",
       minHeight:"100vh"
     }}
