@@ -113,3 +113,7 @@ a {
   margin-top: 80px;
 }
 
+.MuiLinearProgress-bar{
+  background-color: white;
+}
+

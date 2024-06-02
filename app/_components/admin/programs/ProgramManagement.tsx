@@ -77,7 +77,7 @@ const ProgramManagement = () => {
     const fetchChannels = async () => {
       try {
         const response = await axiosBase.get("/api/channels");
-        setChannels(response.data);
+        setChannels(response.data.channels);
       } catch (error) {
         console.error("Error fetching channels:", error);
       }
