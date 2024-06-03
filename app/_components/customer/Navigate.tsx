@@ -20,17 +20,6 @@ const Navigate = () => {
   };
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const highlightColor = "#2c2a61"; 
-  const defaultColor = "#121f4d"; 
-
-  const getBackgroundColor = (path : string) => {
-    if (["/movies", "/favorites", "/watchLater"].includes(path)) {
-      return highlightColor;
-    }
-    return defaultColor;
-  };
-
-  const backgroundColor = getBackgroundColor(currentPath);
 
   const iconStyles = {
     display: "flex",
