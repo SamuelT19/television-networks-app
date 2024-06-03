@@ -20,7 +20,7 @@ const Navigate = () => {
   };
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const highlightColor = "#1e3264"; 
+  const highlightColor = "#2c2a61"; 
   const defaultColor = "#121f4d"; 
 
   const getBackgroundColor = (path : string) => {
@@ -39,7 +39,7 @@ const Navigate = () => {
     width: "50px",
     height: "50px",
     borderRadius: "50%",
-    backgroundColor: backgroundColor,
+    backgroundColor: "#3a4363",
     color: "#fff",
     transition: "background-color 0.3s, transform 0.3s",
     "&:hover": {
