@@ -44,6 +44,12 @@ function Header({ movies, setFilteredMovies, data }: HeaderProps) {
         sx={{
           position: "relative",
           height: "75px",
+          top: 0,
+          width: "100%",
+          zIndex: 1000,
+          "@media (man-width:600px)": {
+            position: "fixed",
+          },
         }}
       >
         <Container

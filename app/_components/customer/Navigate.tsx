@@ -20,6 +20,17 @@ const Navigate = () => {
   };
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const highlightColor = "#1e3264"; 
+  const defaultColor = "#121f4d"; 
+
+  const getBackgroundColor = (path : string) => {
+    if (["/movies", "/favorites", "/watchLater"].includes(path)) {
+      return highlightColor;
+    }
+    return defaultColor;
+  };
+
+  const backgroundColor = getBackgroundColor(currentPath);
 
   const iconStyles = {
     display: "flex",
@@ -28,7 +39,7 @@ const Navigate = () => {
     width: "50px",
     height: "50px",
     borderRadius: "50%",
-    backgroundColor: "#1e3264",
+    backgroundColor: backgroundColor,
     color: "#fff",
     transition: "background-color 0.3s, transform 0.3s",
     "&:hover": {
@@ -44,14 +55,14 @@ const Navigate = () => {
         flexDirection: isSmallScreen ? "row" : "column",
         alignItems: "center",
         justifyContent: isSmallScreen ? "space-around" : "flex-start",
-        width: isSmallScreen ? "100%" : "15%",
+        width: isSmallScreen ? "100%" : "14%",
         backgroundColor: "#121f4d",
-        marginTop: isSmallScreen ? "auto" : "200px",
+        marginTop: isSmallScreen ? "auto" : "50px",
         minHeight: isSmallScreen ? "11vh" : "100%",
         position: isSmallScreen ? "fixed" : "relative",
         bottom: isSmallScreen ? 0 : "auto",
         padding: isSmallScreen ? "10px 0" : "0",
-        minWidth: isSmallScreen ? "100%" : "150px",
+        minWidth: isSmallScreen ? "100%" : "100px",
         zIndex: 20,
       }}
     >

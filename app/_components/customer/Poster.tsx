@@ -161,7 +161,7 @@ const Poster: React.FC<PosterProps> = ({ playedTime, totalTime }) => {
                 <LinearProgress
                   variant="determinate"
                   value={progress}
-                  sx={{ height: 6, borderRadius: 5 }}
+                  sx={{ height: 6, borderRadius: 5,backgroundColor:"rgb(157 163 169 / 59%)" }}
                 />
               </Box>
 
@@ -214,7 +214,7 @@ const Poster: React.FC<PosterProps> = ({ playedTime, totalTime }) => {
         ></Box>
       </Box>
 
-      <Types />
+        <Types />
     </Box>
   );
 };
