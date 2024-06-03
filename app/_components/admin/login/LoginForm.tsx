@@ -77,6 +77,7 @@ const LoginForm: React.FC = () => {
         flexDirection: "column",
         justifyContent: "center",
         px: "40px",
+        minHeight: "44vh",
         marginBlock: { xs: "40px" },
       }}
     >
