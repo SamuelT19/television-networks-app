@@ -76,7 +76,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, length, poster }) => {
       <Box
         sx={{
           position: "relative",
-          height: "250px",
+          height: "225px",
         }}
       >
         <Typography
@@ -104,7 +104,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, length, poster }) => {
         sx={{
           justifyContent: "center",
           background: "linear-gradient(to top, #121F4D,transparent)",
-
           borderRadius: "0 0 4px 4px",
           "@media (max-width: 600px)": {
             position: "absolute",
