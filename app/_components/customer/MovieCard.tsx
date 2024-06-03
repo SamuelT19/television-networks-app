@@ -45,7 +45,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, length, poster }) => {
     backgroundColor: "white",
     borderRadius: 2,
     zIndex: 1,
-    opacity: 0, // Initially hidden
+    opacity: 0, 
     transition: "opacity 0.2s",
   };
 
@@ -95,7 +95,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, length, poster }) => {
         </Typography>
       </Box>
       <CardContent>
-        <Typography variant="h6" component="div" fontWeight="600">
+        <Typography variant="h4" component="h4" fontWeight="600" color="white">
           {title}
         </Typography>
       </CardContent>
