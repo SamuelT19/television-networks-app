@@ -83,11 +83,12 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, length, poster }) => {
           variant="body2"
           sx={{
             position: "absolute",
-            top: 8,
+            top: 10,
             right: 8,
             padding: "4px 8px",
             borderRadius: 1,
             color: "white",
+            fontSize: "21px",
             zIndex:10
           }}
         >

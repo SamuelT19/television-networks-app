@@ -117,7 +117,7 @@ a {
   background-color: white;
 }
 
-.movie_card_icons .css-1d159sf-MuiSvgIcon-root,.movie_card_icons .css-1wxstni-MuiSvgIcon-root,.movie_card_icons .css-ci5apu-MuiSvgIcon-root{
+.movie_card_icons svg{
   width: 1.7em;
   height: 1.7em;
 }
