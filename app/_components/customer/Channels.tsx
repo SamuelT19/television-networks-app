@@ -14,9 +14,9 @@ import nbcLogo from "../../../public/channels/nbc-logo.png";
 import bbcLogo from "../../../public/channels/bbc-logo.png";
 
 const channels = [
-  { name: "HBO", logo: hboLogo },
   { name: "ABC", logo: abcLogo },
   { name: "Disney", logo: disneyLogo },
+  { name: "HBO", logo: hboLogo },
   { name: "Fox", logo: foxLogo },
   { name: "CNN", logo: cnnLogo },
   { name: "ESPN", logo: espnLogo },
@@ -32,29 +32,43 @@ function Channels() {
     const handleScroll = () => {
       const container = containerRef.current;
       if (container) {
-        const children = container.children;
+        const children = Array.from(container.children) as HTMLDivElement[];
+        let middleChild: HTMLDivElement | null = containerRef.current;
         const containerRect = container.getBoundingClientRect();
-
-        Array.from(children).forEach((child) => {
+        let minDistance = Infinity;
+  
+        children.forEach((child) => {
           const childRect = child.getBoundingClientRect();
-          const isMiddle =
-            childRect.left >= containerRect.left + containerRect.width / 3 &&
-            childRect.right <=
-              containerRect.left + (2 * containerRect.width) / 3;
-          if (isMiddle) {
-            child.classList.add("middle");
-          } else {
-            child.classList.remove("middle");
+          const containerMiddleX = containerRect.left + containerRect.width / 2;
+          const containerMiddleY = containerRect.top + containerRect.height / 2;
+          const childMiddleX = (childRect.left + childRect.right) / 2;
+          const childMiddleY = (childRect.top + childRect.bottom) / 2;
+  
+          const distance = Math.hypot(
+            containerMiddleX - childMiddleX,
+            containerMiddleY - childMiddleY
+          );
+  
+          if (distance < minDistance) {
+            minDistance = distance;
+            middleChild = child;
           }
+  
+          child.classList.remove("middle");
         });
+  
+        if (middleChild) {
+          middleChild.classList.add("middle");
+        }
       }
     };
-
+  
     const container = containerRef.current;
     if (container) {
       container.addEventListener("scroll", handleScroll);
+      handleScroll();
     }
-
+  
     return () => {
       if (container) {
         container.removeEventListener("scroll", handleScroll);
@@ -64,65 +78,77 @@ function Channels() {
 
   return (
     <Box
-      ref={containerRef}
       sx={{
-        position: "sticky",
-        left: "10%",
-        top: 0,
-        backgroundColor: "#121F4D",
-        height: "100vh",
-        width: "220px",
-        padding: 2,
-        overflowY: "scroll",
-        scrollbarWidth: "none",
-        "&::before": {
+        position: "relative",
+        "&::before, &::after": {
           content: '""',
           position: "absolute",
-          top: 0,
           left: 0,
           right: 0,
-          height: "50px",
-          background: "linear-gradient(to bottom, #121F4D, transparent)",
+          height: "150px",
           zIndex: 1,
         },
+        "&::before": {
+          top: 0,
+          background: "linear-gradient(to bottom, #121F4D, transparent)",
+        },
         "&::after": {
-          content: '""',
-          position: "absolute",
           bottom: 0,
-          left: 0,
-          right: 0,
-          height: "50px",
           background: "linear-gradient(to top, #121F4D, transparent)",
-          zIndex: 1,
         },
         "@media (max-width:600px)": {
           position: "absolute",
           top: "47vh",
-          left: "4%",
+          left: 0,
           flexDirection: "row",
           height: "165px",
-          width: "90%",
+          width: "100%",
           zIndex: 100,
           overflowX: "scroll",
           overflowY: "hidden",
           display: "flex",
           gap: 4,
           "&::before, &::after": {
+            content: '""',
+            position: "absolute",
+            width: "90px",
+            height: "100%",
+            zIndex: 1,
+          },
+          "&::before": {
+            left: 0,
+            background: "linear-gradient(to right, #121F4D, transparent)",
+          },
+          "&::after": {
             display: "none",
+            right: 0,
+            background: "linear-gradient(to left, #121F4D, transparent)",
           },
         },
       }}
     >
       <Box
+        ref={containerRef}
         sx={{
-          width: "100%",
+          position: "sticky",
+          left: "10%",
+          top: 0,
+          backgroundColor: "#121F4D",
           display: "flex",
           flexDirection: "column",
-          paddingBlock: "50px",
+          height: "100vh",
+          width: "220px",
+          paddingBlock: 6,
+          paddingInline:3,
           gap: 6,
+          overflowY: "scroll",
+          scrollbarWidth: "none",
           "@media (max-width:600px)": {
+            height: "165px",
+            width: "100%",
             flexDirection: "row",
             paddingBlock: "0",
+            paddingInline: 6,
             gap: 4,
             alignItems: "center",
           },
@@ -144,23 +170,20 @@ function Channels() {
                 justifyContent: "center",
                 width: "80px",
               },
-              "&.middle": {
-                transform: "scale(1.3)",
+              "&.middle .inner-box::after": {
+                content: '""',
+                position: "absolute",
+                top: "-12px",
+                left: "-11px",
+                width: "calc(100% + 17px)",
+                height: "calc(100% + 17px)",
+                borderRadius: "50%",
+                border: "3px solid rgba(255, 255, 255, 0.5)",
               },
-              "&:hover": {
-                transform: "scale(1.3) translateX(30px)",
+              "&.middle": {
+                transform: "scale(1.3) translate(30px)",
                 "@media (max-width:600px)": {
-                  transform: "scale(1.3)",
-                },
-                "& .inner-box::after": {
-                  content: '""',
-                  position: "absolute",
-                  top: "-12px",
-                  left: "-11px",
-                  width: "calc(100% + 17px)",
-                  height: "calc(100% + 17px)",
-                  borderRadius: "50%",
-                  border: "3px solid rgba(255, 255, 255, 0.5)",
+                  transform: "scale(1.2)",
                 },
               },
             }}
@@ -175,11 +198,16 @@ function Channels() {
                 backgroundColor: "#1e3264",
                 transition:
                   "transform 0.2s ease-in-out, border 0.2s ease-in-out, padding 0.2s ease-in-out",
+                "@media (max-width:600px)": {
+                  width: "70px",
+                  height: "70px",
+                },
               }}
             >
               <Image
                 src={channel.logo}
                 alt={`${channel.name} logo`}
+                className="channel-image"
                 style={{
                   position: "absolute",
                   inset: "5px",
