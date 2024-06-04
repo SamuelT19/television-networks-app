@@ -141,7 +141,7 @@ const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
             height: "470px",
             overflowY: "auto",
             whiteSpace: "nowrap",
-            padding: "30px 10px",
+            padding: "25px 10px",
             "@media (max-width:600px)": {
               minHeight: "calc(100vh - 130px)",
               scrollbarWidth: "none",
