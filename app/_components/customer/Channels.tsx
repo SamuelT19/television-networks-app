@@ -14,9 +14,9 @@ import nbcLogo from "../../../public/channels/nbc-logo.png";
 import bbcLogo from "../../../public/channels/bbc-logo.png";
 
 const channels = [
-  { name: "HBO", logo: hboLogo },
   { name: "ABC", logo: abcLogo },
   { name: "Disney", logo: disneyLogo },
+  { name: "HBO", logo: hboLogo },
   { name: "Fox", logo: foxLogo },
   { name: "CNN", logo: cnnLogo },
   { name: "ESPN", logo: espnLogo },
