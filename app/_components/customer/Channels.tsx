@@ -66,7 +66,7 @@ function Channels() {
     const container = containerRef.current;
     if (container) {
       container.addEventListener("scroll", handleScroll);
-      handleScroll(); // Check on mount as well
+      handleScroll();
     }
   
     return () => {
@@ -139,6 +139,7 @@ function Channels() {
           height: "100vh",
           width: "220px",
           paddingBlock: 6,
+          paddingInline:3,
           gap: 6,
           overflowY: "scroll",
           scrollbarWidth: "none",
