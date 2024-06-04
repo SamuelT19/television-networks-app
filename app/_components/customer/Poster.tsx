@@ -137,7 +137,8 @@ const Poster: React.FC<PosterProps> = ({ playedTime, totalTime }) => {
               variant="subtitle1"
               color="text.secondary"
               component="p"
-              sx={{ color: "#bdc9c8", lineHeight: "1.5" }}
+              
+              style={{ color: "#bdc9c8", lineHeight: "1.5", width: "91%" }}
             >
               {truncate(description, 150)}
             </Typography>
@@ -161,7 +162,11 @@ const Poster: React.FC<PosterProps> = ({ playedTime, totalTime }) => {
                 <LinearProgress
                   variant="determinate"
                   value={progress}
-                  sx={{ height: 6, borderRadius: 5,backgroundColor:"rgb(157 163 169 / 59%)" }}
+                  sx={{
+                    height: 6,
+                    borderRadius: 5,
+                    backgroundColor: "rgb(157 163 169 / 59%)",
+                  }}
                 />
               </Box>
 
@@ -214,7 +219,7 @@ const Poster: React.FC<PosterProps> = ({ playedTime, totalTime }) => {
         ></Box>
       </Box>
 
-        <Types />
+      <Types />
     </Box>
   );
 };
