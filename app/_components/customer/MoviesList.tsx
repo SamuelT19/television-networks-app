@@ -79,7 +79,7 @@ const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
           minHeight: "100vh",
           paddingTop: isSmallScreen ? "130px" : "35px",
           "@media (min-width:600px)": {
-            width: "90%",
+            width: "100%",
           },
         }}
       >
@@ -142,7 +142,12 @@ const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
             overflowY: "auto",
             whiteSpace: "nowrap",
             padding: "25px 10px",
-            "@media (max-width:600px)": {
+            "@media (min-width: 700px) and (max-width: 1050px) and (min-height: 1000px)":
+              {
+                minHeight: "calc(100vh - 165px)",
+                scrollbarWidth: "none",
+              },
+            "@media (max-width: 600px)": {
               minHeight: "calc(100vh - 130px)",
               scrollbarWidth: "none",
             },
@@ -151,12 +156,15 @@ const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
           <Box
             sx={{
               display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               gap: "5px",
-              "@media (max-width:600px)": {
-                flexDirection: "column",
-                width: "80%",
-                margin: "auto",
-              },
+              "@media (max-width:600px),(min-width:700px) and (max-width:1050px) and (min-height:1000px)":
+                {
+                  flexDirection: "column",
+                  width: "80%",
+                  margin: "auto",
+                },
             }}
           >
             {filteredMovies.length === 0 ? (
@@ -174,29 +182,24 @@ const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
               ))
             )}
           </Box>
-          {!isSmallScreen && (
-            <Box
-              sx={{
-                height: "70%",
-                width: "15%",
-                position: "absolute",
-                right: "-13px",
-                background: "linear-gradient(to right,transparent, #121F4D)",
-              }}
-            ></Box>
-          )}
-        </Box>
-        {isSmallScreen && (
           <Box
             sx={{
-              height: "25%",
-              width: "100%",
+              height: "70%",
+              width: "15%",
               position: "absolute",
-              bottom: 0,
-              background: "linear-gradient(to top, #121F4D, transparent )",
+              right: "-13px",
+              background: "linear-gradient(to right,transparent, #121F4D)",
+              "@media (max-width: 600px), (min-width: 700px) and (max-width: 1050px) and (min-height: 1000px)":
+                {
+                  height: "25%",
+                  width: "100%",
+                  position: "absolute",
+                  bottom: 0,
+                  background: "linear-gradient(to top, #121F4D, transparent )",
+                },
             }}
           ></Box>
-        )}
+        </Box>
       </Container>
     </>
   );

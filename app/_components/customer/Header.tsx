@@ -63,6 +63,10 @@ function Header({ movies, setFilteredMovies, data }: HeaderProps) {
             height: "50px",
             mt: 1,
             color: "white",
+            "@media (max-width:600px)": {
+              paddingLeft: 0,
+              gap: "10px",
+            },
           }}
         >
           <Box sx={iconStyles}>
@@ -87,6 +91,10 @@ function Header({ movies, setFilteredMovies, data }: HeaderProps) {
               alignItems: "center",
               gap: "20px",
               paddingRight: "50px",
+              "@media (max-width:600px)": {
+                paddingRight: "10px",
+                gap: "10px",
+              },
             }}
           >
             <Typography

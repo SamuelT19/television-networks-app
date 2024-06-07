@@ -64,7 +64,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ title, length, poster }) => {
             opacity: 1,
           },
         },
-        "@media (max-width: 600px)": {
+        "@media (max-width: 600px),(min-width:700px) and (max-width:1050px) and (min-height:1000px)": {
           position: "relative",
           width: "100%",
         },
