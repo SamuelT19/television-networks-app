@@ -125,9 +125,9 @@ function Channels() {
             background: "linear-gradient(to left, #121F4D, transparent)",
           },
         },
-        "@media (max-width:400px) and (max-height:750px)": {
+        "@media (max-width:600px) and (max-height:750px)": {
           top: "33vh",
-          height: "130px",
+          height: "165px",
         },
         "@media (min-width:335px) and (max-width:600px) and (min-height:800px)": {
           top: "44vh",

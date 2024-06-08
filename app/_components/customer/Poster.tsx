@@ -144,7 +144,7 @@ const Poster: React.FC<PosterProps> = ({ playedTime, totalTime }) => {
               height: "30%",
               gap: "11%",
 
-              "@media (max-height:780px) and (max-width:400px)": {
+              "@media (max-height:800px) and (max-width:600px), (max-height:625px) and (max-width:1050px)": {
                 display: "none",
               },
             }}

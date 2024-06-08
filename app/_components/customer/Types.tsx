@@ -93,7 +93,7 @@ function Types() {
           scrollbarWidth: "none",
         },
         "@media (max-width:400px) and (max-height:750px)": {
-          bottom: "5%",
+          bottom: 0,
         },
         "@media (min-width:700px) and (min-height:1050px)": {
           flexWrap: "wrap",
