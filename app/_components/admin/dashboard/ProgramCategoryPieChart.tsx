@@ -2,18 +2,21 @@
 
 import axiosBase from "@/app/endPoints/axios";
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import io from "socket.io-client";
 
 const ENDPOINT =
-  process.env.TV_APP_BACKEND_URL || "https://tv-networks-server.onrender.com";
+  process.env.TV_APP_BACKEND_URL ||"http://localhost:5000"|| "https://tv-networks-server.onrender.com";
 
 const socket = io(ENDPOINT);
 
 interface Program {
   id: number;
-  categoryName: string;
+  category: {
+    id: number;
+    name: string;
+  };
 }
 
 const ProgramCategoryPieChart: React.FC = () => {
@@ -25,12 +28,13 @@ const ProgramCategoryPieChart: React.FC = () => {
   ];
 
   const [programData, setProgramData] = useState<Program[]>([]);
+  // console.log(programData)
   const [isError, setIsError] = useState<boolean>(false);
 
   const fetchPrograms = async () => {
     try {
       const response = await axiosBase.get("/api/programs");
-      setProgramData(response.data);
+      setProgramData(response.data.data.programs);
       setIsError(false);
     } catch (error) {
       console.error("Error fetching program categories:", error);
@@ -55,7 +59,7 @@ const ProgramCategoryPieChart: React.FC = () => {
     });
 
     programData.forEach((program) => {
-      const categoryName = program.categoryName;
+      const categoryName = program.category.name;
       const currentCount = categoryCounts.get(categoryName) || 0;
       categoryCounts.set(categoryName, currentCount + 1);
     });
