@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import axiosBase from "@/app/endPoints/axios";
 import { useProgramsContext } from "@/app/context/ProgramsContext";
+import { setUserInLocalStorage } from "@/app/utils/localStorageHelpers";
 
 type FormData = {
   username: string;
@@ -29,6 +30,8 @@ const schema = z.object({
     .max(20, "Username must be at most 20 characters long"),
   password: z.string().min(4, "Password must be at least 4 characters long"),
 });
+
+
 
 const LoginForm: React.FC = () => {
   const { state, dispatch } = useProgramsContext();
@@ -56,8 +59,7 @@ const LoginForm: React.FC = () => {
         setError("Invalid username or password");
       } else {
         const user = response.data.user;
-        // Store user info in localStorage
-        localStorage.setItem("user", JSON.stringify(user));
+        setUserInLocalStorage(user, 24);
         dispatch({ type: "SET_USER", payload: user });
         router.push("/dashboard");
       }
