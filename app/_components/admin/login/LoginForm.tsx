@@ -55,7 +55,10 @@ const LoginForm: React.FC = () => {
       if (!response?.data?.success) {
         setError("Invalid username or password");
       } else {
-        dispatch({ type: "SET_USER", payload: response.data.user });
+        const user = response.data.user;
+        // Store user info in localStorage
+        localStorage.setItem("user", JSON.stringify(user));
+        dispatch({ type: "SET_USER", payload: user });
         router.push("/dashboard");
       }
     } catch (error) {
@@ -63,6 +66,7 @@ const LoginForm: React.FC = () => {
       setError("An error occurred during login");
     }
   };
+  
 
   const onClick = () => {
     router.push("/tvNetworks");

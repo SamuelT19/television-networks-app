@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
 import { State, Action } from "./types";
+import { getUserFromLocalStorage } from "../utils/localStorageHelpers";
 
 export const initialState = {
-  user: null,
+  user: getUserFromLocalStorage(),
   favorites: [],
   watchLater: [],
 };
