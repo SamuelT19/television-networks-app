@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   MaterialReactTable,
@@ -19,8 +20,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   IconButton,
   MenuItem,
+  Switch,
   TextField,
   Tooltip,
   lighten,
@@ -33,20 +36,16 @@ import axiosBase from "@/app/endPoints/axios";
 import { io } from "socket.io-client";
 
 const channelSchema = z.object({
-  id: z.number(),
+  id: z.number().optional(),
   name: z.string().min(1).max(20),
+  isActive: z.boolean(),
 });
 
 type Channel = {
   id: number;
   name: string;
+  isActive: boolean;
 };
-
-// type filterData = {
-//   id: string;
-//   value: unknown;
-//   type: string;
-// };
 
 type UserApiResponse = {
   data: {
@@ -71,7 +70,7 @@ const socket = io(ENDPOINT);
 const ChannelManagement = () => {
   const [open, setOpen] = useState(false);
   const [currentChannel, setCurrentChannel] = useState<Channel | null>(null);
-  const [channelName, setChannelName] = useState("");
+  const [formData, setFormData] = useState<Partial<Channel>>({});
   const [validationError, setValidationError] = useState<string | null>(null);
 
   // data and fetching state
@@ -82,52 +81,20 @@ const ChannelManagement = () => {
   const [rowCount, setRowCount] = useState(0);
 
   // table state
-  const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
-    []
-  );
-  const [columnFilterFns, setColumnFilterFns] =
-    useState<MRT_ColumnFilterFnsState>({ id: "equals", name: "startsWith" });
+  const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([]);
+  const [columnFilterFns, setColumnFilterFns] = useState<MRT_ColumnFilterFnsState>({ id: "equals", name: "startsWith" });
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
-  const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: 10 });
 
-  // console.log(columnFilterFns);
-
-  const updateColumnFiltersWithType = useCallback(() => {
-    const updatedColumnFilters = columnFilters.map((filter) => {
-      const filterFn = columnFilterFns[filter.id];
-      return {
-        ...filter,
-        type: filterFn ? filterFn : "contains",
-      };
-    });
-
-    // Check if columnFilters actually changed before updating
-    if (
-      JSON.stringify(updatedColumnFilters) !== JSON.stringify(columnFilters)
-    ) {
-      setColumnFilters(updatedColumnFilters);
-    }
-  }, [columnFilters, columnFilterFns]);
-
-  useEffect(() => {
-    updateColumnFiltersWithType();
-  }, [updateColumnFiltersWithType]);
-
-  // console.log(columnFilters);
   const fetchChannels = useCallback(async () => {
     setIsLoading(true);
     try {
       const params = {
         start: `${pagination.pageIndex}`,
         size: `${pagination.pageSize}`,
-
         filters: JSON.stringify(columnFilters ?? []),
         filtersFn: JSON.stringify(columnFilterFns ?? []),
-
         globalFilter: globalFilter ?? "",
         sorting: JSON.stringify(sorting ?? []),
       };
@@ -142,13 +109,7 @@ const ChannelManagement = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [
-    columnFilters,
-    globalFilter,
-    pagination.pageIndex,
-    pagination.pageSize,
-    sorting,
-  ]);
+  }, [columnFilters, globalFilter, pagination.pageIndex, pagination.pageSize, sorting]);
 
   useEffect(() => {
     fetchChannels();
@@ -160,37 +121,41 @@ const ChannelManagement = () => {
 
   const handleOpen = (channel: Channel | null = null) => {
     setCurrentChannel(channel);
-    setChannelName(channel ? channel.name : "");
+    setFormData(channel ? { ...channel } : {});
     setOpen(true);
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, isActive: event.target.checked });
   };
 
   const handleClose = () => {
     setOpen(false);
     setCurrentChannel(null);
-    setChannelName("");
+    setFormData({});
     setValidationError(null);
   };
 
   const handleSubmit = async () => {
-    const newChannel = {
-      id: currentChannel ? currentChannel.id : 0,
-      name: channelName,
-    };
+    const newChannel = { ...formData };
 
     try {
       channelSchema.parse(newChannel);
       if (currentChannel) {
         await axiosBase
-          .put(`/api/channels/${currentChannel.id}`, {
-            name: channelName,
-          })
+          .put(`/api/channels/${currentChannel.id}`, newChannel)
           .then(() => {
             fetchChannels();
             handleClose();
           });
       } else {
         await axiosBase
-          .post("/api/channels", { name: channelName })
+          .post("/api/channels", newChannel)
           .then(() => {
             fetchChannels();
             handleClose();
@@ -217,11 +182,46 @@ const ChannelManagement = () => {
     }
   };
 
+
+  const handleColumnFiltersChange = useCallback(
+    (updaterOrValue: any) => {
+      const newFilters =
+        typeof updaterOrValue === "function"
+          ? updaterOrValue(columnFilters)
+          : updaterOrValue;
+  
+      const updatedFilters = newFilters.map((filter: any) => {
+        const column = columns.find(
+          (col) => col.accessorKey === filter.id || col.id === filter.id
+        );
+        const filterFn = columnFilterFns[filter.id];
+  
+        let filtervariant;
+        if (["id"].includes(filter.id)) {
+          filtervariant = "number";
+        } else {
+          filtervariant = column?.filterVariant;
+        }
+  
+        return {
+          ...filter,
+          type: filterFn,
+          ...(filtervariant && { filtervariant }),
+          ...(column?.accessorFn && { filtervariant: filtervariant || "text" }),
+        };
+      });
+  
+      setColumnFilters(updatedFilters);
+    },
+    [columnFilters, columnFilterFns] 
+  );
+
   const filteringMethods = {
     numeric: [
       "equals",
       "notEquals",
       "between",
+      "betweenInclusive",
       "greaterThan",
       "greaterThanOrEqual",
       "lessThan",
@@ -243,14 +243,23 @@ const ChannelManagement = () => {
         accessorKey: "id",
         header: "ID",
         filterFn: "equals",
+        filterVariant: "text",
         columnFilterModeOptions: filteringMethods.numeric as MRT_FilterOption[],
       },
       {
         accessorKey: "name",
         header: "Name",
         filterFn: "startsWith",
-        columnFilterModeOptions:
-          filteringMethods.character as MRT_FilterOption[],
+        filterVariant: "autocomplete",
+      },
+      {
+        header: "Status",
+        accessorFn: (row) => (row.isActive ? "true" : "false"),
+        id: "isActive",
+        filterVariant: "checkbox",
+        enableColumnFilterModes: false,
+        Cell: ({ cell }) => (cell.getValue() === "true" ? "Active" : "Inactive"),
+        size: 170,
       },
     ],
     []
@@ -259,20 +268,16 @@ const ChannelManagement = () => {
   const table = useMaterialReactTable({
     columns,
     data: channels,
-
     getRowId: (row) => String(row.id),
-
     initialState: {
       showColumnFilters: true,
       showGlobalFilter: true,
     },
-
     enableRowActions: true,
     enableColumnFilterModes: true,
     enableColumnOrdering: true,
     enableColumnPinning: true,
     enableFacetedValues: true,
-
     manualFiltering: true,
     manualPagination: true,
     manualSorting: true,
@@ -283,7 +288,8 @@ const ChannelManagement = () => {
           children: "Error loading data",
         }
       : undefined,
-    onColumnFiltersChange: setColumnFilters,
+      enableRowPinning: true,
+    onColumnFiltersChange: handleColumnFiltersChange,
     onColumnFilterFnsChange: setColumnFilterFns,
     onGlobalFilterChange: setGlobalFilter,
     onPaginationChange: setPagination,
@@ -307,10 +313,7 @@ const ChannelManagement = () => {
           </IconButton>
         </Tooltip>
         <Tooltip title="Delete">
-          <IconButton
-            color="error"
-            onClick={() => handleDelete(row.original.id)}
-          >
+          <IconButton color="error" onClick={() => handleDelete(row.original.id)}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -360,13 +363,26 @@ const ChannelManagement = () => {
           <DialogContent>
             <TextField
               label="Channel Name"
-              value={channelName}
-              onChange={(e) => setChannelName(e.target.value)}
+              name="name"
+              value={formData.name || ""}
+              onChange={handleChange}
               fullWidth
             />
-            {validationError && (
-              <p style={{ color: "red" }}>{validationError}</p>
+            {currentChannel && (
+              <Box mt={2}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.isActive || false}
+                      onChange={handleSwitchChange}
+                      color="primary"
+                    />
+                  }
+                  label="Active"
+                />
+              </Box>
             )}
+            {validationError && <p style={{ color: "red" }}>{validationError}</p>}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
@@ -381,3 +397,4 @@ const ChannelManagement = () => {
 };
 
 export default ChannelManagement;
+

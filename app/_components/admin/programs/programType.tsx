@@ -16,15 +16,19 @@ export const CategorySchema = z.object({
 });
 
 export const ProgramSchema = z.object({
-  id: z.number().positive(),
+  id: z.number().positive().optional(),
   title: z.string().min(1),
   duration: z.number().positive(),
   description: z.string().min(1),
   videoUrl: z.string().url(),
-  airDate: z.string().datetime(),
-  channel: ChannelSchema,
-  type: TypeSchema,
-  category: CategorySchema,
+  airDate: z.string().datetime().optional(),
+  isActive: z.boolean().optional(),
+  typeId: z.number(),
+  categoryId: z.number(),
+  channelId: z.number(),
+  channel: ChannelSchema.optional(),
+  type: TypeSchema.optional(),
+  category: CategorySchema.optional(),
 });
 
 export type Program = z.infer<typeof ProgramSchema>;

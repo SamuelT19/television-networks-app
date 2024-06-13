@@ -88,9 +88,10 @@ const ProgramManagement = () => {
       title: "startsWith",
       duration: "between",
       description: "contains",
-      typeId: "equals",
-      channelId: "equals",
-      categoryId: "equals",
+      type_name: "equals",
+      channel_name: "notEquals",
+      category_name: "equals",
+      airDate: "between",
     });
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
@@ -99,27 +100,6 @@ const ProgramManagement = () => {
     pageSize: 10,
   });
 
-  const updateColumnFiltersWithType = useCallback(() => {
-    const updatedColumnFilters = columnFilters.map((filter) => {
-      const filterFn = columnFilterFns[filter.id];
-      return {
-        ...filter,
-        type: filterFn ? filterFn : "contains",
-      };
-    });
-
-    // Check if columnFilters actually changed before updating
-    if (
-      JSON.stringify(updatedColumnFilters) !== JSON.stringify(columnFilters)
-    ) {
-      setColumnFilters(updatedColumnFilters);
-    }
-  }, [columnFilters, columnFilterFns]);
-
-  useEffect(() => {
-    updateColumnFiltersWithType();
-  }, [updateColumnFiltersWithType]);
-
   const fetchPrograms = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -127,7 +107,7 @@ const ProgramManagement = () => {
         start: `${pagination.pageIndex}`,
         size: `${pagination.pageSize}`,
         filters: JSON.stringify(columnFilters ?? []),
-        filtersFn: JSON.stringify(columnFilterFns ?? []),
+        // filtersFn: JSON.stringify(columnFilterFns ?? []),
         globalFilter: globalFilter ?? "",
         sorting: JSON.stringify(sorting ?? []),
       };
@@ -144,6 +124,7 @@ const ProgramManagement = () => {
     }
   }, [
     columnFilters,
+    columnFilterFns,
     globalFilter,
     pagination.pageIndex,
     pagination.pageSize,
@@ -191,30 +172,6 @@ const ProgramManagement = () => {
     ]);
   }, []);
 
-
-  const idToNameMap = useMemo(() => {
-    const channelMap = channels.reduce((acc, channel) => {
-      acc[channel.id] = channel.name;
-      return acc;
-    }, {} as Record<number, string>);
-    
-    const typeMap = types.reduce((acc, type) => {
-      acc[type.id] = type.name;
-      return acc;
-    }, {} as Record<number, string>);
-    
-    const categoryMap = categories.reduce((acc, category) => {
-      acc[category.id] = category.name;
-      return acc;
-    }, {} as Record<number, string>);
-    
-    return {
-      channels: channelMap,
-      types: typeMap,
-      categories: categoryMap,
-    };
-  }, [channels, types, categories]);
-
   const handleOpenDialog = (program: Program | null = null) => {
     setEditingProgram(program);
     setNewProgram(program ? { ...program } : {});
@@ -228,9 +185,9 @@ const ProgramManagement = () => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = event.target;
     setNewProgram({
       ...newProgram,
       [name]: name === "duration" ? Number(value) : value,
@@ -239,22 +196,26 @@ const ProgramManagement = () => {
 
   const handleSelectChange = (event: SelectChangeEvent<number>) => {
     const { name, value } = event.target;
-    setNewProgram({ ...newProgram, [name as string]: value });
+    setNewProgram({ ...newProgram, [name]: value });
   };
 
   const handleSaveProgram = async () => {
     const validationErrors = validateProgram(newProgram);
     if (Object.values(validationErrors).some((error) => error)) {
       setValidationErrors(validationErrors);
+      console.log(validationErrors);
       return;
     }
-
+    console.log(isSaving);
     setIsSaving(true);
+    setIsError(false);
+    console.log(isSaving);
 
     try {
       if (editingProgram) {
         await axiosBase.put(`/api/programs/${editingProgram.id}`, newProgram);
       } else {
+        setIsSaving(true);
         await axiosBase.post("/api/programs", newProgram);
       }
       socket.emit("programsUpdated");
@@ -279,29 +240,52 @@ const ProgramManagement = () => {
     }
   };
 
-  const handleColumnFiltersChange = (updaterOrValue: any) => {
-    const newFilters =
-      typeof updaterOrValue === "function"
-        ? updaterOrValue(columnFilters)
-        : updaterOrValue;
-    const updatedFilters = newFilters.map((filter: any) => ({
-      ...filter,
-      type: filter.type || "equals",
-    }));
-    setColumnFilters(updatedFilters);
-  };
-
+  const handleColumnFiltersChange = useCallback(
+    (updaterOrValue: any) => {
+      const newFilters =
+        typeof updaterOrValue === "function"
+          ? updaterOrValue(columnFilters)
+          : updaterOrValue;
+  
+      const updatedFilters = newFilters.map((filter: any) => {
+        const column = columns.find(
+          (col) => col.accessorKey === filter.id || col.id === filter.id
+        );
+        const filterFn = columnFilterFns[filter.id];
+  
+        let filtervariant;
+        if (["id"].includes(filter.id)) {
+          filtervariant = "number";
+        } else {
+          filtervariant = column?.filterVariant;
+        }
+  
+        return {
+          ...filter,
+          type: filterFn,
+          ...(filtervariant && { filtervariant }),
+          ...(column?.accessorFn && { filtervariant: filtervariant || "text" }),
+        };
+      });
+  
+      setColumnFilters(updatedFilters);
+    },
+    [columnFilters, columnFilterFns] 
+  );
+  
+ 
   const filteringMethods = {
     numeric: [
       "equals",
       "notEquals",
       "between",
+      "betweenInclusive",
       "greaterThan",
-      "greaterThanOrEqual",
+      "greaterThanOrEqualTo",
       "lessThan",
-      "lessThanOrEqual",
+      "lessThanOrEqualTo",
     ],
-    character: [
+    dateTime: [
       "fuzzy",
       "contains",
       "startsWith",
@@ -309,72 +293,86 @@ const ProgramManagement = () => {
       "equals",
       "notEquals",
     ],
+    range:[
+      "between",
+      "betweenInclusive",
+    ]
   };
 
   const columns = useMemo<MRT_ColumnDef<Program>[]>(
     () => [
       {
-        header: "Id",
+        header: "Id ",
         accessorKey: "id",
-        filterFn: "equals",
         columnFilterModeOptions: filteringMethods.numeric as MRT_FilterOption[],
         size: 100,
       },
       {
         header: "Title",
         accessorKey: "title",
-        filterFn: "startsWith",
-        columnFilterModeOptions:
-          filteringMethods.character as MRT_FilterOption[],
+        filterVariant: "autocomplete",
       },
       {
         header: "Duration",
         accessorKey: "duration",
-        filterFn: "between",
-        columnFilterModeOptions: filteringMethods.numeric as MRT_FilterOption[],
+        filterVariant: "range-slider",
+        muiFilterSliderProps: {
+          max: 10_000_000,
+          min: 100_000,
+          marks: true,
+          step: 200_000,
+        },
       },
       {
         header: "Description",
         accessorKey: "description",
-        filterFn: "contains",
-        columnFilterModeOptions:
-          filteringMethods.character as MRT_FilterOption[],
+        filterVariant: "text",
+        size:300
       },
       {
-        accessorKey: "typeId",
-        header: "Type",
-        size: 140,
-        columnFilterModeOptions:
-          filteringMethods.character as MRT_FilterOption[],
-        Cell: ({ cell }) => {
-          const typeId = cell.getValue<number>();
-          return idToNameMap.types[typeId] || typeId;
-        },
-      },
-      {
-        accessorKey: "channelId",
+        accessorFn: (row) => row.channel?.name || "",
+        id: "channel_name",
         header: "Channel",
-        size: 140,
-        columnFilterModeOptions:
-          filteringMethods.character as MRT_FilterOption[],
-        Cell: ({ cell }) => {
-          const channelId = cell.getValue<number>();
-          return idToNameMap.channels[channelId] || channelId;
-        },
+        filterVariant: "select",
+        // enableColumnFilterModes: false,
+        size: 100,
       },
       {
-        accessorKey: "categoryId",
+        accessorFn: (row) => row.type?.name || "",
+        id: "type_name",
+        header: "Type",
+        filterVariant: "select",
+        // enableColumnFilterModes: false,
+        size: 50,
+
+      },
+
+      {
+        accessorFn: (row) => row.category?.name || "",
+        id: "category_name",
         header: "Category",
-        size: 140,
+        filterVariant: "multi-select",
+        filterFn: "notEquals",
+        columnFilterModeOptions: ["equals", "notEquals"],
+        // enableColumnFilterModes: false,
+        size: 100,
+
+      },
+      {
+        accessorFn: (row) => (row.airDate ? new Date(row.airDate) : new Date()),
+        id: "airDate",
+        header: "Air Date",
+        filterVariant: "datetime",
+        filterFn: "between",
         columnFilterModeOptions:
-          filteringMethods.character as MRT_FilterOption[],
-        Cell: ({ cell }) => {
-          const categoryId = cell.getValue<number>();
-          return idToNameMap.categories[categoryId] || categoryId;
-        },
+          filteringMethods.numeric as MRT_FilterOption[],
+        Cell: ({ cell }) =>
+          `${cell.getValue<Date>().toLocaleDateString()} ${cell
+            .getValue<Date>()
+            .toLocaleTimeString()}`,
       },
     ],
-    [idToNameMap]
+    []
   );
 
   const table = useMaterialReactTable({
@@ -466,6 +464,7 @@ const ProgramManagement = () => {
       </Box>
     ),
   });
+  
 
   return (
     <Box
@@ -533,13 +532,15 @@ const ProgramManagement = () => {
                 helperText={validationErrors?.videoUrl}
               />
             </Grid>
+
             <Grid item xs={6}>
               <FormControl fullWidth variant="outlined">
                 <InputLabel id="channel-select-label">Channels</InputLabel>
                 <Select
                   labelId="channel-select-label"
-                  name="channel.id"
-                  value={newProgram.channel?.id || ""}
+                  name="channelId"
+                  value={newProgram.channelId || ""}
+                  error={!!validationErrors?.channelId}
                   onChange={handleSelectChange}
                   label="Channels"
                 >
@@ -556,8 +557,9 @@ const ProgramManagement = () => {
                 <InputLabel id="type-select-label">Types</InputLabel>
                 <Select
                   labelId="type-select-label"
-                  name="type.id"
-                  value={newProgram.type?.id || ""}
+                  name="typeId"
+                  value={newProgram.typeId || ""}
+                  error={!!validationErrors?.typeId}
                   onChange={handleSelectChange}
                   label="Types"
                 >
@@ -574,8 +576,9 @@ const ProgramManagement = () => {
                 <InputLabel id="category-select-label">Categories</InputLabel>
                 <Select
                   labelId="category-select-label"
-                  name="category.id"
-                  value={newProgram.category?.id || ""}
+                  name="categoryId"
+                  value={newProgram.categoryId || ""}
+                  error={!!validationErrors?.categoryId}
                   onChange={handleSelectChange}
                   label="Categories"
                 >
