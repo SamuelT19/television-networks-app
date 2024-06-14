@@ -174,7 +174,7 @@ const ProgramManagement = () => {
 
   const handleOpenDialog = (program: Program | null = null) => {
     setEditingProgram(program);
-    setNewProgram(program ? { ...program } : {});
+    setNewProgram(program ? { ...program,isActive: true } : {});
     setOpenDialog(true);
   };
 
@@ -215,7 +215,6 @@ const ProgramManagement = () => {
       if (editingProgram) {
         await axiosBase.put(`/api/programs/${editingProgram.id}`, newProgram);
       } else {
-        setIsSaving(true);
         await axiosBase.post("/api/programs", newProgram);
       }
       socket.emit("programsUpdated");
