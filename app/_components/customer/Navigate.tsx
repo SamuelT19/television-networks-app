@@ -28,7 +28,7 @@ const Navigate = () => {
     width: "50px",
     height: "50px",
     borderRadius: "50%",
-    backgroundColor: "#1e3264",
+    backgroundColor: "#3a4363",
     color: "#fff",
     transition: "background-color 0.3s, transform 0.3s",
     "&:hover": {

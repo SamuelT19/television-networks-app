@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import axiosBase from "@/app/endPoints/axios";
 import { useProgramsContext } from "@/app/context/ProgramsContext";
+import { setUserInLocalStorage } from "@/app/utils/localStorageHelpers";
 
 type FormData = {
   username: string;
@@ -29,6 +30,8 @@ const schema = z.object({
     .max(20, "Username must be at most 20 characters long"),
   password: z.string().min(4, "Password must be at least 4 characters long"),
 });
+
+
 
 const LoginForm: React.FC = () => {
   const { state, dispatch } = useProgramsContext();
@@ -55,7 +58,9 @@ const LoginForm: React.FC = () => {
       if (!response?.data?.success) {
         setError("Invalid username or password");
       } else {
-        dispatch({ type: "SET_USER", payload: response.data.user });
+        const user = response.data.user;
+        setUserInLocalStorage(user, 24);
+        dispatch({ type: "SET_USER", payload: user });
         router.push("/dashboard");
       }
     } catch (error) {
@@ -63,6 +68,7 @@ const LoginForm: React.FC = () => {
       setError("An error occurred during login");
     }
   };
+  
 
   const onClick = () => {
     router.push("/tvNetworks");
@@ -77,6 +83,7 @@ const LoginForm: React.FC = () => {
         flexDirection: "column",
         justifyContent: "center",
         px: "40px",
+        minHeight: "44vh",
         marginBlock: { xs: "40px" },
       }}
     >

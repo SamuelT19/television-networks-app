@@ -14,9 +14,9 @@ import nbcLogo from "../../../public/channels/nbc-logo.png";
 import bbcLogo from "../../../public/channels/bbc-logo.png";
 
 const channels = [
-  { name: "HBO", logo: hboLogo },
   { name: "ABC", logo: abcLogo },
   { name: "Disney", logo: disneyLogo },
+  { name: "HBO", logo: hboLogo },
   { name: "Fox", logo: foxLogo },
   { name: "CNN", logo: cnnLogo },
   { name: "ESPN", logo: espnLogo },
@@ -36,27 +36,27 @@ function Channels() {
         let middleChild: HTMLDivElement | null = containerRef.current;
         const containerRect = container.getBoundingClientRect();
         let minDistance = Infinity;
-  
+
         children.forEach((child) => {
           const childRect = child.getBoundingClientRect();
           const containerMiddleX = containerRect.left + containerRect.width / 2;
           const containerMiddleY = containerRect.top + containerRect.height / 2;
           const childMiddleX = (childRect.left + childRect.right) / 2;
           const childMiddleY = (childRect.top + childRect.bottom) / 2;
-  
+
           const distance = Math.hypot(
             containerMiddleX - childMiddleX,
             containerMiddleY - childMiddleY
           );
-  
+
           if (distance < minDistance) {
             minDistance = distance;
             middleChild = child;
           }
-  
+
           child.classList.remove("middle");
         });
-  
+
         if (middleChild) {
           middleChild.classList.add("middle");
         }
@@ -98,7 +98,7 @@ function Channels() {
         },
         "@media (max-width:600px)": {
           position: "absolute",
-          top: "47vh",
+          top: "45vh",
           left: 0,
           flexDirection: "row",
           height: "165px",
@@ -125,6 +125,18 @@ function Channels() {
             background: "linear-gradient(to left, #121F4D, transparent)",
           },
         },
+        "@media (max-width:600px) and (max-height:750px)": {
+          top: "33vh",
+          height: "165px",
+        },
+        "@media (min-width:335px) and (max-width:600px) and (min-height:800px)": {
+          top: "44vh",
+        },
+        "@media (max-width:550px) and (min-height:700px) and (max-height:800px)": {
+          top: "29vh",
+          height: "165px",
+        },
+
       }}
     >
       <Box
@@ -139,18 +151,21 @@ function Channels() {
           height: "100vh",
           width: "220px",
           paddingBlock: 6,
-          paddingInline:3,
+          paddingInline: 3,
           gap: 6,
           overflowY: "scroll",
           scrollbarWidth: "none",
           "@media (max-width:600px)": {
-            height: "165px",
+            height: "100%",
             width: "100%",
             flexDirection: "row",
-            paddingBlock: "0",
+            paddingBlock: "0px",
             paddingInline: 6,
             gap: 4,
             alignItems: "center",
+          },
+          "@media (min-height:1000px)": {
+            paddingTop: "10vh",
           },
         }}
       >
@@ -199,8 +214,12 @@ function Channels() {
                 transition:
                   "transform 0.2s ease-in-out, border 0.2s ease-in-out, padding 0.2s ease-in-out",
                 "@media (max-width:600px)": {
-                  width: "70px",
-                  height: "70px",
+                  width: "60px",
+                  height: "60px",
+                },
+                "@media (max-width:400px) and (max-height:750px)": {
+                  width: "40px",
+                  height: "40px",
                 },
               }}
             >

@@ -15,7 +15,7 @@ const LoginPage: React.FC = () => {
           lg: 950,
           xl: 1050,
         },
-        height: "100vh",
+        height: "95vh",
       }}
     >
       <Paper
@@ -25,7 +25,7 @@ const LoginPage: React.FC = () => {
           borderRadius: 8,
           boxShadow: "0 2px 4px rgba(0, 0, 0)",
           textAlign: "center",
-          height: "85%",
+          height: "94%",
         }}
       >
         <LogoSection />

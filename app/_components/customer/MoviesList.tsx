@@ -76,72 +76,101 @@ const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
         sx={{
           position: "relative",
           backgroundColor: "#121f4d",
-          mt: 2,
           minHeight: "100vh",
-          paddingTop: "50px",
+          paddingTop: isSmallScreen ? "130px" : "35px",
           "@media (min-width:600px)": {
-            width: "90%",
+            width: "100%",
           },
         }}
       >
-        <Header
-          movies={movies}
-          setFilteredMovies={setFilteredMovies}
-          data={data}
-        />
-        {data === "movies" && (
-          <Container sx={{ height: "50px" }}>
-            <Grid container gap="40px" color="white" mb={1}>
-              {["Recommended", "Popular", "Featured"].map((text) => (
-                <Typography
-                  key={text}
-                  variant="h3"
-                  sx={{
-                    fontSize: "1rem",
-                    fontWeight: 500,
-                    opacity: 0.8,
-                    "&:hover": {
-                      opacity: 1,
-                      transform: "scale(1.1)",
-                      transition: "all 0.3s ease",
-                    },
-                  }}
-                >
-                  {text}
-                </Typography>
-              ))}
-            </Grid>
-            <hr />
-          </Container>
-        )}
+        <Box
+          sx={{
+            position: isSmallScreen ? "fixed" : "relative",
+            top: isSmallScreen ? "35px" : 0,
+            width: "100%",
+            zIndex: 1000,
+            backgroundColor: "#121f4d",
+          }}
+        >
+          <Header
+            movies={movies}
+            setFilteredMovies={setFilteredMovies}
+            data={data}
+          />
+          {data === "movies" && (
+            <Container
+              sx={{
+                height: "50px",
+                top: isSmallScreen ? "60px" : "auto",
+                width: "100%",
+                zIndex: 1000,
+                backgroundColor: "#121f4d",
+                paddingTop: isSmallScreen ? "10px" : "0",
+              }}
+            >
+              <Grid container gap="40px" color="white" mb={1}>
+                {["Recommended", "Popular", "Featured"].map((text) => (
+                  <Typography
+                    key={text}
+                    variant="h3"
+                    sx={{
+                      fontSize: "1rem",
+                      fontWeight: 500,
+                      opacity: 0.8,
+                      "&:hover": {
+                        opacity: 1,
+                        transform: "scale(1.1)",
+                        transition: "all 0.3s ease",
+                      },
+                    }}
+                  >
+                    {text}
+                  </Typography>
+                ))}
+              </Grid>
+              <hr />
+            </Container>
+          )}
+        </Box>
 
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            width: "95%",
+            width: "103%",
             height: "470px",
             overflowY: "auto",
             whiteSpace: "nowrap",
-            padding: "10px",
-            "@media (max-width:600px)": {
-              minHeight: "calc(100vh - 50px)",
+            padding: "25px 10px",
+            "@media (min-width: 700px) and (max-width: 1050px) and (min-height: 1000px)":
+              {
+                minHeight: "calc(100vh - 165px)",
+                scrollbarWidth: "none",
+              },
+            "@media (max-width: 600px)": {
+              minHeight: "calc(100vh - 130px)",
+              scrollbarWidth: "none",
             },
           }}
         >
           <Box
             sx={{
               display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               gap: "5px",
-              "@media (max-width:600px)": {
-                flexDirection: "column",
-                width: "80%",
-                margin: "auto",
-              },
+              "@media (max-width:600px),(min-width:700px) and (max-width:1050px) and (min-height:1000px)":
+                {
+                  flexDirection: "column",
+                  width: "80%",
+                  margin: "auto",
+                },
             }}
           >
             {filteredMovies.length === 0 ? (
-              <Typography variant="h6" color="red" fontWeight={500}>No data of {data}, Please add some</Typography>
+              <Typography variant="h6" color="red" fontWeight={500}>
+                No data of {data}, Please add some
+              </Typography>
             ) : (
               filteredMovies.map((movie) => (
                 <MovieCard
@@ -153,18 +182,24 @@ const MoviesList: React.FC<MoviesListProps> = ({ data }) => {
               ))
             )}
           </Box>
-        </Box>
-        {isSmallScreen && (
           <Box
             sx={{
-              height: "40%",
-              width: "100%",
+              height: "70%",
+              width: "15%",
               position: "absolute",
-              bottom: 0,
-              background: "linear-gradient(to top, black, transparent)",
+              right: "-13px",
+              background: "linear-gradient(to right,transparent, #121F4D)",
+              "@media (max-width: 600px), (min-width: 700px) and (max-width: 1050px) and (min-height: 1000px)":
+                {
+                  height: "25%",
+                  width: "100%",
+                  position: "absolute",
+                  bottom: 0,
+                  background: "linear-gradient(to top, #121F4D, transparent )",
+                },
             }}
           ></Box>
-        )}
+        </Box>
       </Container>
     </>
   );

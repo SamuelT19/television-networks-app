@@ -117,3 +117,7 @@ a {
   background-color: white;
 }
 
+.movie_card_icons svg{
+  width: 1.7em;
+  height: 1.7em;
+}

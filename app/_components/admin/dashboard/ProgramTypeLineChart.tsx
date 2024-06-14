@@ -1,7 +1,12 @@
 "use client";
 
 import axiosBase from "@/app/endPoints/axios";
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import {
   LineChart,
@@ -14,15 +19,19 @@ import {
 } from "recharts";
 import io from "socket.io-client";
 
-const ENDPOINT = process.env.TV_APP_BACKEND_URL || "http://localhost:5000";
+const ENDPOINT =
+  process.env.TV_APP_BACKEND_URL ||"http://localhost:5000" || "https://tv-networks-server.onrender.com";
 
 const socket = io(ENDPOINT);
 
 interface Program {
   id: number;
   airDate: string;
-  typeId: number;
-  typeName: string;
+  type:{
+    id:number;
+    name:string;
+  }
+  
 }
 
 const ProgramTypeLineChart: React.FC = () => {
@@ -71,7 +80,7 @@ const ProgramTypeLineChart: React.FC = () => {
       const day = getDayOfMonth(program.airDate);
       const dayIndex = aggregatedData.findIndex((item) => item.day === day);
       types.forEach((type) => {
-        if (program.typeId === type.id) {
+        if (program.type.id === type.id) {
           for (let i = dayIndex; i < aggregatedData.length; i++) {
             aggregatedData[i][type.name] =
               (aggregatedData[i][type.name] as number) + 1;
@@ -90,7 +99,7 @@ const ProgramTypeLineChart: React.FC = () => {
     });
 
     dataCount.forEach((program) => {
-      const typeName = program.typeName;
+      const typeName = program.type.name;
       const currentCount = typeCounts.get(typeName) || 0;
       typeCounts.set(typeName, currentCount + 1);
     });
@@ -106,8 +115,8 @@ const ProgramTypeLineChart: React.FC = () => {
   useEffect(() => {
     const fetchProgramData = async () => {
       try {
-        const response = await axiosBase.get<Array<Program>>("/api/programs");
-        const programData = response.data;
+        const response = await axiosBase.get("/api/programs");
+        const programData = response.data.data.programs;
         setProgramTypeData(aggregateProgramData(programData));
         setDataCount(programData);
       } catch (error) {
@@ -128,12 +137,11 @@ const ProgramTypeLineChart: React.FC = () => {
     };
   }, []);
 
-
   return (
     <Card
       sx={{
         marginTop: "20px",
-        boxShadow: "4px 4px 2px 4px rgba(0, 0, 0, 0.2)",
+        boxShadow: "2px 2px 5px 5px rgba(0, 0, 0, 0.2)",
       }}
     >
       <CardContent>
@@ -229,3 +237,4 @@ const ProgramTypeLineChart: React.FC = () => {
 };
 
 export default ProgramTypeLineChart;
+

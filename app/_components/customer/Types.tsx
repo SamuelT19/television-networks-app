@@ -342,36 +342,7 @@ function Types() {
     transition: "transform 0.2s",
     overflow: "hidden",
     backgroundColor: "#2c2d4a",
-    "&:hover, &:focus": {
-      transform: "scale(1.05)",
-      "&::before": {
-        content: '""',
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        background: "linear-gradient(45deg, rgba(0, 0, 0,0.7), rgba(255, 255, 255,0.3))",
-        zIndex: -1,
-      },
-      "&::after": {
-        content: '""',
-        position: "absolute",
-        bottom: -15, // Position just outside the bottom
-        left: "50%",
-        transform: "translateX(-50%)",
-        width: 75, // Adjust width for the half-circle
-        height: 45, // Half of the width to create a half-circle
-        background:" rgba(255, 255, 255,0.3)",
-          // "linear-gradient(to top, rgba(0, 0, 0), rgba(255, 255, 255,0.3))",
-        borderRadius: "50% 50% 0 0",
-        zIndex: 10,
-        filter: "blur(13px)", 
-      },
-      "& .bottom-box": {
-        opacity: 1,
-      },
-    },
+
     "@media (max-width:600px)": {
       width: 140,
       margin: "0 4px",
@@ -385,7 +356,7 @@ function Types() {
 
   const bottomBoxStyles = {
     position: "absolute",
-    bottom: -10, // Distance from the bottom of the card
+    bottom: -10,
     left: "50%",
     transform: "translateX(-50%)",
     width: "35%",
@@ -393,7 +364,7 @@ function Types() {
     backgroundColor: "white",
     borderRadius: 2,
     zIndex: 1,
-    opacity: 0, // Initially hidden
+    opacity: 0,
     transition: "opacity 0.2s",
   };
 
@@ -427,13 +398,35 @@ function Types() {
   return (
     <Box
       sx={{
-        display: "flex",
         position: "absolute",
         bottom: 20,
+        width: "100%",
         whiteSpace: "nowrap",
-        scrollbarWidth: "thin",
+        overflow: "auto",
+        display: "flex",
+        padding: "3vh 8px",
+        "&::-webkit-scrollbar": {
+          height: "8px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#888",
+          borderRadius: "4px",
+        },
         "@media (max-width:600px)": {
-          bottom: "100px",
+          bottom: "3%",
+          scrollbarWidth: "none",
+        },
+        "@media (max-width:400px) and (max-height:750px)": {
+          bottom: 0,
+        },
+        "@media (min-width:700px) and (min-height:1050px)": {
+          flexWrap: "wrap",
+          rowGap: "3vh",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        "@media (min-width:350px) and (min-height:800px)": {
+          bottom: 0,
         },
       }}
     >
@@ -443,15 +436,42 @@ function Types() {
           sx={{
             position: "relative",
             display: "flex",
-            flexDirection:"column",
+            flexDirection: "column",
             "&:hover, &:focus": {
               "& .bottom-box": {
                 opacity: 1,
               },
+              "& .card-box": {
+                transform: "scale(1.05)",
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  background:
+                    "linear-gradient(45deg, rgba(0, 0, 0,0.7), rgba(255, 255, 255,0.3))",
+                  zIndex: -1,
+                },
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  bottom: -15,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: 75,
+                  height: 45,
+                  background: "rgba(255, 255, 255,0.3)",
+                  borderRadius: "50% 50% 0 0",
+                  zIndex: 10,
+                  filter: "blur(13px)",
+                },
+              },
             },
           }}
         >
-          <Card sx={cardStyles}>
+          <Card sx={cardStyles} className="card-box">
             <Link href={type.link} passHref>
               <CardActionArea>
                 <CardContent>

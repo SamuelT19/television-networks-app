@@ -111,11 +111,14 @@ const Poster: React.FC<PosterProps> = ({ playedTime, totalTime }) => {
           <Box
             sx={{
               width: { md: "60%", sm: "80%" },
-              height: "185px",
+              height: "92px",
               mt: "118px",
               ml: "2%",
               color: "seashell",
               overflow: "hidden",
+              "@media (max-width:400px) and (max-height:750px)": {
+                height: "140px",
+              },
             }}
           >
             <Typography
@@ -133,83 +136,119 @@ const Poster: React.FC<PosterProps> = ({ playedTime, totalTime }) => {
             >
               Grey's Anatomy
             </Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "30%",
+              gap: "11%",
+
+              "@media (max-height:800px) and (max-width:600px), (max-height:625px) and (max-width:1050px)": {
+                display: "none",
+              },
+            }}
+          >
             <Typography
               variant="subtitle1"
               color="text.secondary"
               component="p"
-              sx={{ color: "#bdc9c8", lineHeight: "1.5" }}
+              style={{
+                color: "#bdc9c8",
+                lineHeight: "1.5",
+                width: "91%",
+                marginLeft: "2%",
+              }}
             >
               {truncate(description, 150)}
             </Typography>
-          </Box>
-          <Box sx={{ display: "flex", height: "100px" }}>
-            <Box
-              sx={{
-                width: "50%",
-                height: "250px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                paddingLeft: 1,
-                paddingBottom: 1,
-                "@media (max-width:600px)": {
-                  width: "90%",
-                },
-              }}
-            >
-              <Box sx={{ width: "100%", paddingX: 1, paddingBottom: 1 }}>
-                <LinearProgress
-                  variant="determinate"
-                  value={progress}
-                  sx={{ height: 6, borderRadius: 5,backgroundColor:"rgb(157 163 169 / 59%)" }}
-                />
-              </Box>
-
+            <Box sx={{ display: "flex" }}>
               <Box
                 sx={{
-                  width: "95%",
+                  width: "50%",
+                  height: "250px",
                   display: "flex",
-                  justifyContent: "space-between",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  paddingLeft: 1,
+                  paddingBottom: 1,
+                  "@media (max-width:600px)": {
+                    width: "90%",
+                  },
                 }}
               >
-                <Typography
-                  variant="subtitle1"
-                  color="text.secondary"
-                  component="div"
-                  sx={{ color: "white" }}
+                <Box sx={{ width: "100%", paddingX: 1, paddingBottom: 1 }}>
+                  <LinearProgress
+                    variant="determinate"
+                    value={progress}
+                    sx={{
+                      height: 6,
+                      borderRadius: 5,
+                      backgroundColor: "rgb(157 163 169 / 59%)",
+                    }}
+                  />
+                </Box>
+
+                <Box
+                  sx={{
+                    width: "95%",
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
                 >
-                  {new Date(playedTime * 1000).toISOString().substr(11, 8)}
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  color="text.secondary"
-                  component="div"
-                  sx={{ marginLeft: "auto", color: "white" }}
-                >
-                  {new Date(totalTime * 1000).toISOString().substr(11, 8)}
-                </Typography>
+                  <Typography
+                    variant="subtitle1"
+                    color="text.secondary"
+                    component="div"
+                    sx={{ color: "white" }}
+                  >
+                    {new Date(playedTime * 1000).toISOString().substr(11, 8)}
+                  </Typography>
+                  <Typography
+                    variant="subtitle1"
+                    color="text.secondary"
+                    component="div"
+                    sx={{ marginLeft: "auto", color: "white" }}
+                  >
+                    {new Date(totalTime * 1000).toISOString().substr(11, 8)}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-            <Box
-              sx={{
-                "@media (max-width:600px)": {
-                  display: "none",
-                },
-              }}
-            >
-              <PlayCircleOutlineIcon
-                sx={{ marginLeft: 1, color: "white", fontSize: "40px", mt: -2 }}
-              />
+              <Box
+                sx={{
+                  "@media (max-width:800px)": {
+                    display: "none"
+                  },
+                }}
+              >
+                <PlayCircleOutlineIcon
+                  sx={{
+                    marginLeft: 1,
+                    color: "white",
+                    fontSize: "40px",
+                    mt: -2,
+                  }}
+                />
+              </Box>
             </Box>
           </Box>
         </Box>
         <Box
           sx={{
-            height: "35%",
+            height: "45%",
             width: "100%",
             position: "absolute",
             bottom: 0,
             background: "linear-gradient(to top, #121F4D, transparent)",
+            "@media (max-width:600px)": {
+              height: "56%",
+              bottom: "5%",
+            },
+
+            "@media (max-width:400px) and (max-height:750px)": {
+              height: "65%",
+              bottom: "100px",
+            },
           }}
         ></Box>
       </Box>
