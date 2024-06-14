@@ -89,7 +89,7 @@ const ProgramManagement = () => {
       duration: "between",
       description: "contains",
       type_name: "equals",
-      channel_name: "notEquals",
+      channel_name: "contains",
       category_name: "equals",
       airDate: "between",
     });
