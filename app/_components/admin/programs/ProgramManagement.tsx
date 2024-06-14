@@ -54,8 +54,8 @@ type UserApiResponse = {
 
 const ENDPOINT =
   process.env.TV_APP_BACKEND_URL ||
-  "http://localhost:5000" ||
-  "https://tv-networks-server.onrender.com";
+  "https://tv-networks-server.onrender.com" ||
+  "http://localhost:5000";
 
 const socket = io(ENDPOINT);
 
@@ -174,7 +174,7 @@ const ProgramManagement = () => {
 
   const handleOpenDialog = (program: Program | null = null) => {
     setEditingProgram(program);
-    setNewProgram(program ? { ...program,isActive: true } : {});
+    setNewProgram(program ? { ...program, isActive: true } : {});
     setOpenDialog(true);
   };
 
@@ -245,20 +245,20 @@ const ProgramManagement = () => {
         typeof updaterOrValue === "function"
           ? updaterOrValue(columnFilters)
           : updaterOrValue;
-  
+
       const updatedFilters = newFilters.map((filter: any) => {
         const column = columns.find(
           (col) => col.accessorKey === filter.id || col.id === filter.id
         );
         const filterFn = columnFilterFns[filter.id];
-  
+
         let filtervariant;
         if (["id"].includes(filter.id)) {
           filtervariant = "number";
         } else {
           filtervariant = column?.filterVariant;
         }
-  
+
         return {
           ...filter,
           type: filterFn,
@@ -266,13 +266,12 @@ const ProgramManagement = () => {
           ...(column?.accessorFn && { filtervariant: filtervariant || "text" }),
         };
       });
-  
+
       setColumnFilters(updatedFilters);
     },
-    [columnFilters, columnFilterFns] 
+    [columnFilters, columnFilterFns]
   );
-  
- 
+
   const filteringMethods = {
     numeric: [
       "equals",
@@ -292,10 +291,7 @@ const ProgramManagement = () => {
       "equals",
       "notEquals",
     ],
-    range:[
-      "between",
-      "betweenInclusive",
-    ]
+    range: ["between", "betweenInclusive"],
   };
 
   const columns = useMemo<MRT_ColumnDef<Program>[]>(
@@ -326,7 +322,7 @@ const ProgramManagement = () => {
         header: "Description",
         accessorKey: "description",
         filterVariant: "text",
-        size:300
+        size: 300,
       },
       {
         accessorFn: (row) => row.channel?.name || "",
@@ -343,7 +339,6 @@ const ProgramManagement = () => {
         filterVariant: "select",
         // enableColumnFilterModes: false,
         size: 50,
-
       },
 
       {
@@ -355,7 +350,6 @@ const ProgramManagement = () => {
         columnFilterModeOptions: ["equals", "notEquals"],
         // enableColumnFilterModes: false,
         size: 100,
-
       },
       {
         accessorFn: (row) => (row.airDate ? new Date(row.airDate) : new Date()),
@@ -363,8 +357,7 @@ const ProgramManagement = () => {
         header: "Air Date",
         filterVariant: "datetime",
         filterFn: "between",
-        columnFilterModeOptions:
-          filteringMethods.numeric as MRT_FilterOption[],
+        columnFilterModeOptions: filteringMethods.numeric as MRT_FilterOption[],
         Cell: ({ cell }) =>
           `${cell.getValue<Date>().toLocaleDateString()} ${cell
             .getValue<Date>()
@@ -463,7 +456,6 @@ const ProgramManagement = () => {
       </Box>
     ),
   });
-  
 
   return (
     <Box
