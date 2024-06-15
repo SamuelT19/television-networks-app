@@ -62,8 +62,8 @@ interface ColumnFilterFns {
 
 const ENDPOINT =
   process.env.TV_APP_BACKEND_URL ||
-  "http://localhost:5000" ||
-  "https://tv-networks-server.onrender.com";
+  "https://tv-networks-server.onrender.com" ||
+  "http://localhost:5000";
 
 const socket = io(ENDPOINT);
 

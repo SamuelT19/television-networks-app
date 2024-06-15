@@ -1,12 +1,7 @@
 "use client";
 
 import axiosBase from "@/app/endPoints/axios";
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import {
   LineChart,
@@ -20,18 +15,19 @@ import {
 import io from "socket.io-client";
 
 const ENDPOINT =
-  process.env.TV_APP_BACKEND_URL ||"http://localhost:5000" || "https://tv-networks-server.onrender.com";
+  process.env.TV_APP_BACKEND_URL ||
+  "https://tv-networks-server.onrender.com" ||
+  "http://localhost:5000";
 
 const socket = io(ENDPOINT);
 
 interface Program {
   id: number;
   airDate: string;
-  type:{
-    id:number;
-    name:string;
-  }
-  
+  type: {
+    id: number;
+    name: string;
+  };
 }
 
 const ProgramTypeLineChart: React.FC = () => {
@@ -237,4 +233,3 @@ const ProgramTypeLineChart: React.FC = () => {
 };
 
 export default ProgramTypeLineChart;
-

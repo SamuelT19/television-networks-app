@@ -5,7 +5,7 @@ import io from "socket.io-client";
 import axiosBase from "@/app/endPoints/axios";
 import DashboardCountCard from "./DashboardCountCard";
 
-const ENDPOINT = process.env.TV_APP_BACKEND_URL || "https://tv-networks-server.onrender.com";
+const ENDPOINT = process.env.TV_APP_BACKEND_URL || "http://localhost:5000" || "https://tv-networks-server.onrender.com";
 
 const socket = io(ENDPOINT);
 
